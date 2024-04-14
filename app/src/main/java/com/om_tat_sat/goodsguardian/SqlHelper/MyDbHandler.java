@@ -46,6 +46,11 @@ public class MyDbHandler extends SQLiteOpenHelper {
         db.close();
         Log.e("ans Items_holder addes------","sucessfull");
     }
+    public void delete(String where){
+        SQLiteDatabase database=getWritableDatabase();
+        database.delete(Parameters.Table_Name,where,null);
+        Log.e( "delete:-------------------","delete Successful");
+    }
     public List<Items_holder> get_all_items_in_sorted_form_for_category(String Category,int code){
         List<Items_holder>item_list=new ArrayList<>();
         SQLiteDatabase db=getReadableDatabase();

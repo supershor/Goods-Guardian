@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.om_tat_sat.goodsguardian.RecyclerAdapters.recycler;
 import com.om_tat_sat.goodsguardian.SqlHelper.Category_MyDbHandler;
+import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlParameters.Parameters;
 import com.om_tat_sat.goodsguardian.model.Category_holder;
 
@@ -65,6 +66,8 @@ public class Category_frag extends Fragment implements RecyclerviewInterface{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             categoryMyDbHandler.delete(Parameters.KEY_NAME+"='"+categoryHolders.get(position).getName()+"'");
+                            MyDbHandler myDbHandler=new MyDbHandler(getContext());
+                            myDbHandler.delete(Parameters.KEY_CATEGORY+"='"+categoryHolders.get(position).getName()+"'");
                             Toast.makeText(getContext(), categoryHolders.get(position).getName()+" delete successful", Toast.LENGTH_SHORT).show();
                             relaunch();
                         }
