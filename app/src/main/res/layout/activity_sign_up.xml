@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -132,7 +131,7 @@
                         android:layout_marginBottom="@dimen/_10sdp"
                         android:background="@drawable/less_border_white_background_input_taker"
                         android:hint="@string/enter_password"
-                        android:textAlignment="center"
+                        android:textAlignment="viewStart"
                         android:padding="@dimen/_7sdp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
@@ -161,7 +160,7 @@
                         android:layout_marginBottom="@dimen/_10sdp"
                         android:background="@drawable/less_border_white_background_input_taker"
                         android:hint="@string/confirm_password"
-                        android:textAlignment="center"
+                        android:textAlignment="viewStart"
                         android:padding="@dimen/_7sdp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
@@ -189,11 +188,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_25sdp"
                         android:layout_marginRight="@dimen/_25sdp"
-                        android:background="@drawable/blue_background_button_drawable_design"
+                        android:background="@drawable/less_border_black_background_input_taker"
                         android:text="@string/save"
                         android:textSize="@dimen/_18sdp"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/white" />
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/already_have_an_account_sign_up_page"
                         android:layout_width="match_parent"
