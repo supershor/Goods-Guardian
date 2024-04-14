@@ -3,7 +3,25 @@
     <style name="Base.Theme.GoodsGuardian" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="actionOverflowButtonStyle">@style/ThreeDots</item>
     </style>
-
-    <style name="Theme.GoodsGuardian" parent="Base.Theme.GoodsGuardian" />
+    <style name="ThreeDots" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:tint">@color/black</item>
+    </style>
+    <style name="Theme.GoodsGuardian" parent="Base.Theme.GoodsGuardian" >
+        <item name="actionOverflowButtonStyle">@style/ThreeDots</item>
+    </style>
+    <style name="black" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="actionOverflowButtonStyle">@style/ThreeDots</item>
+        <item name="colorAccent">#FFFFFF</item>
+        <item name="background">@color/white</item>
+        <item name="hintTextColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="android:numbersInnerTextColor">@color/black</item>
+        <item name="android:textColorTertiary">@color/black</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/black</item>
+        <item name="android:actionMenuTextColor">@color/cream</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

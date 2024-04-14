@@ -16,6 +16,9 @@
             android:name=".Login"
             android:exported="false" />
         <activity
+            android:name=".Add_new_item_page_information_gathering"
+            android:exported="false" />
+        <activity
             android:name=".Sign_Up"
             android:exported="false" />
         <activity
