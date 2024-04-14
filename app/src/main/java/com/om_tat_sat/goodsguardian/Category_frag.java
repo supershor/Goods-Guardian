@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,7 @@ public class Category_frag extends Fragment implements RecyclerviewInterface{
     RecyclerView recyclerView2;
     ArrayList<Category_holder> categoryHolders;
     Category_MyDbHandler categoryMyDbHandler;
+    AppCompatButton add_items;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -39,8 +41,15 @@ public class Category_frag extends Fragment implements RecyclerviewInterface{
             categoryHolders.add(categoryHolder);
         }
         recyclerView2=view.findViewById(R.id.recyclerview);
+        add_items=view.findViewById(R.id.add_items);
         recycler recycler=new recycler(getContext(),categoryHolders,this::onclick);
         recyclerView2.setAdapter(recycler);
+        add_items.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), Add_new_item_page_information_gathering.class));
+            }
+        });
     }
 
     @Override

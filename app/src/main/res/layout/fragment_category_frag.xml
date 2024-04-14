@@ -10,4 +10,17 @@
         android:layout_height="wrap_content"
         android:background="@color/cream"
         android:id="@+id/recyclerview"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/less_border_black_background_input_taker"
+        android:text="Add New Item"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_50sdp"
+        android:id="@+id/add_items"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_25sdp"
+        android:textStyle="bold"/>
 </LinearLayout>
