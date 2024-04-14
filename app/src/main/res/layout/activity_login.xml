@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:background="@color/cream"
@@ -145,11 +144,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_25sdp"
                         android:layout_marginRight="@dimen/_25sdp"
-                        android:background="@drawable/less_border_blue_background_input_taker"
+                        android:background="@drawable/less_border_black_background_input_taker"
                         android:text="@string/login"
                         android:textSize="@dimen/_18sdp"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/white" />
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/sign_up_at_login_page"
                         android:layout_width="match_parent"
