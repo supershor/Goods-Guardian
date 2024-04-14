@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "191794545486",
+    "project_id": "goods-guardian-216f8",
+    "storage_bucket": "goods-guardian-216f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191794545486:android:c6c7d27d363c8887a9141f",
+        "android_client_info": {
+          "package_name": "com.om_tat_sat.goodsguardian"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCokHr-dJaAJoEJGTC9CD2Z6YKRlksX9EQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
