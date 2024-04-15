@@ -99,6 +99,7 @@ public class Items_shower extends AppCompatActivity implements RecyclerviewInter
             intent1.putExtra("quantity",arrayList.get(position).getQuantity());
             intent1.putExtra("expiry_date",arrayList.get(position).getExpiry_date());
             intent1.putExtra("img_uri",arrayList.get(position).getImage());
+            intent1.putExtra("category",arrayList.get(position).getCategory());
             startActivity(intent1);
         }
         Toast.makeText(Items_shower.this, position+"->"+index, Toast.LENGTH_SHORT).show();

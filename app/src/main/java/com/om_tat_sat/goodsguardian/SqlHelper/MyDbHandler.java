@@ -84,6 +84,18 @@ public class MyDbHandler extends SQLiteOpenHelper {
         }
         return item_list;
     }
+    public void update(String query,Items_holder itemsHolder){
+        SQLiteDatabase sqLiteDatabase=getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(Parameters.KEY_NAME,itemsHolder.getName());
+        contentValues.put(Parameters.KEY_CATEGORY,itemsHolder.getCategory());
+        contentValues.put(Parameters.KEY_EXPIRY_DATE,itemsHolder.getExpiry_date());
+        contentValues.put(Parameters.KEY_QUANTITY,Integer.parseInt(itemsHolder.getQuantity()+""));
+        contentValues.put(Parameters.KEY_Image,itemsHolder.getImage());
+        contentValues.put(Parameters.KEY_DESCRIPTION,itemsHolder.getDescription());
+        sqLiteDatabase.update(Parameters.Table_Name,contentValues,query,null);
+        Log.e("updates----------------------------","update successful");
+    }
     public List<Items_holder> get_all_items_in_sorted_form_without_category(int code){
         List<Items_holder>item_list=new ArrayList<>();
         SQLiteDatabase db=getReadableDatabase();
