@@ -150,6 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_25sdp"
                         android:text="@string/category"
+                        android:id="@+id/spinner_shower_tv"
                         android:textStyle="bold"
                         android:textAlignment="viewStart"
                         android:padding="@dimen/_7sdp"
@@ -161,6 +162,7 @@
                         android:background="@drawable/less_border_white_background_input_taker"
                         android:layout_marginEnd="@dimen/_25sdp"
                         android:padding="@dimen/_7sdp"
+                        android:id="@+id/spinner_shower_ll"
                         android:layout_marginStart="@dimen/_25sdp"
                         android:layout_height="wrap_content">
                         <androidx.appcompat.widget.AppCompatSpinner

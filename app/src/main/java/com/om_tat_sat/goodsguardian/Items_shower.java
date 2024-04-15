@@ -94,8 +94,10 @@ public class Items_shower extends AppCompatActivity implements RecyclerviewInter
         } else if (index==3) {
             Intent intent1=new Intent(Items_shower.this, Add_new_item_page_information_gathering.class);
             intent1.putExtra("save_or_change",1);
-            Items_holder itemsHolder=arrayList.get(position);
-            //intent1.putExtra("data_about_item_to_be_changed",itemsHolder);
+            intent1.putExtra("name",arrayList.get(position).getName());
+            intent1.putExtra("description",arrayList.get(position).getDescription());
+            intent1.putExtra("quantity",arrayList.get(position).getQuantity());
+            intent1.putExtra("expiry_date",arrayList.get(position).getExpiry_date());
             startActivity(intent1);
         }
         Toast.makeText(Items_shower.this, position+"->"+index, Toast.LENGTH_SHORT).show();

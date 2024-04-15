@@ -1,5 +1,6 @@
 package com.om_tat_sat.goodsguardian.RecyclerAdapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,12 +37,15 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
         return viewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.Name.setText(arrayList.get(position).getName()+"");
         holder.Desc.setText("Desc. : "+arrayList.get(position).getDescription()+"");
         holder.Quantity.setText("Quan. : "+arrayList.get(position).getQuantity()+"");
-        holder.Expiry_date.setText("Exp. : "+arrayList.get(position).getExpiry_date()+"");
+        String arr[]=arrayList.get(position).getExpiry_date().split("_");
+        int month=Integer.parseInt(arr[1])+1;
+        holder.Expiry_date.setText("Exp. : "+Integer.parseInt(arr[0])+"/"+month+"/"+Integer.parseInt(arr[2]));
         holder.Expiring_in.setText("+30d");
     }
 

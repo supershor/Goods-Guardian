@@ -1,5 +1,6 @@
 package com.om_tat_sat.goodsguardian;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,6 +28,8 @@ import com.om_tat_sat.goodsguardian.model.Category_holder;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -41,10 +46,16 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
     AppCompatButton save;
     AppCompatButton change;
     AppCompatButton choose_photo;
+    LinearLayout layout;TextView textView;
     FirebaseAuth firebaseAuth;
+    String expiry_date;
+    String description;
+    String name;
+    int quan;
     Intent intent;
     Category_MyDbHandler Category_MyDbHandler;
     ArrayList<String> categories_for_storing_items;
+    @SuppressLint({"SetTextI18n", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +79,8 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
          */
 
         //initializing elements
+        textView=findViewById(R.id.spinner_shower_tv);
+        layout=findViewById(R.id.spinner_shower_ll);
         item_name=findViewById(R.id.item_name_at_add_items);
         item_description=findViewById(R.id.item_description_at_add_items);
         quantity=findViewById(R.id.item_quantity_at_add_items);
@@ -84,6 +97,17 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
             change.setVisibility(View.GONE);
         }else{
             save.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
+            layout.setVisibility(View.GONE);
+            name=intent.getStringExtra("name");
+            description=intent.getStringExtra("description");
+            expiry_date=intent.getStringExtra("expiry_date");
+            String[] arr=expiry_date.split("_");
+            datePicker.updateDate(Integer.parseInt(arr[2]),Integer.parseInt(arr[1]),Integer.parseInt(arr[0]));
+            quan=intent.getIntExtra("quantity",0);
+            item_name.setText(name, TextView.BufferType.EDITABLE);
+            item_description.setText(description);
+            quantity.setText(quan+"");
         }
         //Sql
         MyDbHandler myDbHandler=new MyDbHandler(Add_new_item_page_information_gathering.this);
@@ -143,6 +167,7 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                 if (check_fields()){
                     Toast.makeText(Add_new_item_page_information_gathering.this,issue, Toast.LENGTH_SHORT).show();
                 }else{
+
                     //Items_holder itemsHolder=intent.getExtras("data_about_item_to_be_changed");
                     //Log.e("Add new done-------------------",itemsHolder.toString());
                 }
