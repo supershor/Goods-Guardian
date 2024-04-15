@@ -45,6 +45,7 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
     EditText item_description;
     EditText quantity;
     DatePicker datePicker;
+    ImageView imageView;
 
     androidx.appcompat.widget.AppCompatSpinner spinner;
     AppCompatButton take_photo;
@@ -89,6 +90,7 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
         textView=findViewById(R.id.spinner_shower_tv);
         layout=findViewById(R.id.spinner_shower_ll);
         item_name=findViewById(R.id.item_name_at_add_items);
+        imageView=findViewById(R.id.image_setter);
         item_description=findViewById(R.id.item_description_at_add_items);
         quantity=findViewById(R.id.item_quantity_at_add_items);
         datePicker=findViewById(R.id.item_expiry_date_at_add_items);
@@ -108,6 +110,11 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
             layout.setVisibility(View.GONE);
             name=intent.getStringExtra("name");
             description=intent.getStringExtra("description");
+            if (intent.getByteArrayExtra("img_uri")==null||Utils.getImage(intent.getByteArrayExtra("img_uri"))==null){
+                Toast.makeText(this, "Unable to set Imageview", Toast.LENGTH_SHORT).show();
+            }else {
+                imageView.setImageBitmap(Utils.getImage(intent.getByteArrayExtra("img_uri")));
+            }
             expiry_date=intent.getStringExtra("expiry_date");
             String[] arr=expiry_date.split("_");
             datePicker.updateDate(Integer.parseInt(arr[2]),Integer.parseInt(arr[1]),Integer.parseInt(arr[0]));
@@ -230,7 +237,6 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                     Uri ImageSetter=data.getData();
                     uri=ImageSetter;
                     Log.e("URI---------------------",uri.toString());
-                    ImageView imageView=findViewById(R.id.image_setter);
                     imageView.setImageBitmap(Utils.getImage(getUri()));
                 }
             }
