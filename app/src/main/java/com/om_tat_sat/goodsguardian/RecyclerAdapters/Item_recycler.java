@@ -76,6 +76,17 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
             delete=itemView.findViewById(R.id.delete_item_page);
             edit=itemView.findViewById(R.id.edit_item_page);
             imageView=itemView.findViewById(R.id.item_imageview_setter_at_main_item_page);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (recyclerviewInterface!=null){
+                        int position=getAdapterPosition();
+                        if ((position!=RecyclerView.NO_POSITION)){
+                            recyclerviewInterface.onclick(position,4);
+                        }
+                    }
+                }
+            });
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -101,6 +101,10 @@ public class Items_shower extends AppCompatActivity implements RecyclerviewInter
             intent1.putExtra("img_uri",arrayList.get(position).getImage());
             intent1.putExtra("category",arrayList.get(position).getCategory());
             startActivity(intent1);
+        }else if (index==4){
+            Intent intent1=new Intent(Items_shower.this, Big_picture_view.class);
+            intent1.putExtra("img_uri",arrayList.get(position).getImage());
+            startActivity(intent1);
         }
         Toast.makeText(Items_shower.this, position+"->"+index, Toast.LENGTH_SHORT).show();
     }

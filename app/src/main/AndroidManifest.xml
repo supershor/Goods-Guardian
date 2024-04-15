@@ -13,6 +13,9 @@
         android:theme="@style/Theme.GoodsGuardian"
         tools:targetApi="31">
         <activity
+            android:name=".Big_picture_view"
+            android:exported="false" />
+        <activity
             android:name=".Items_shower"
             android:exported="false" />
         <activity
