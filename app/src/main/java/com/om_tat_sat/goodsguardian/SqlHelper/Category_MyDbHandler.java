@@ -25,7 +25,19 @@ public class Category_MyDbHandler extends SQLiteOpenHelper {
         String create="CREATE TABLE "+Parameters.CATEGORY_Table_Name+"("+Parameters.KEY_NAME+" Text,"+Parameters.KEY_QUANTITY+" Integer)";
         db.execSQL(create);
     }
-
+    public void decrease(String name, int quantity,String where){
+        if (quantity-1==0){
+            SQLiteDatabase database=getWritableDatabase();
+            database.delete(Parameters.CATEGORY_Table_Name,where,null);
+            Log.e( "delete:-------------------","delete Successful");
+        }else {
+            SQLiteDatabase database=getWritableDatabase();
+            ContentValues contentValues=new ContentValues();
+            contentValues.put(Parameters.KEY_NAME,name);
+            contentValues.put(Parameters.KEY_QUANTITY,quantity-1);
+            database.update(Parameters.CATEGORY_Table_Name,contentValues,Parameters.KEY_NAME+"='"+name+"' AND "+Parameters.KEY_QUANTITY+"='"+quantity+"'",null);
+        }
+    }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

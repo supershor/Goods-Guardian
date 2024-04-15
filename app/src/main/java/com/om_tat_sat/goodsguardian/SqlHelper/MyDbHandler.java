@@ -72,7 +72,6 @@ public class MyDbHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){
             do{
                 Items_holder Items_holder=new Items_holder();
-                Items_holder.setId(Integer.parseInt(cursor.getString(0)));
                 Items_holder.setName(cursor.getString(1));
                 Items_holder.setDescription(cursor.getString(2));
                 Items_holder.setQuantity(Integer.parseInt(cursor.getString(3)));

@@ -27,6 +27,8 @@ import com.om_tat_sat.goodsguardian.model.Items_holder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 public class Add_new_item_page_information_gathering extends AppCompatActivity {
     EditText item_name;
     EditText item_description;
@@ -141,7 +143,8 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                 if (check_fields()){
                     Toast.makeText(Add_new_item_page_information_gathering.this,issue, Toast.LENGTH_SHORT).show();
                 }else{
-
+                    //Items_holder itemsHolder=intent.getExtras("data_about_item_to_be_changed");
+                    //Log.e("Add new done-------------------",itemsHolder.toString());
                 }
             }
         });

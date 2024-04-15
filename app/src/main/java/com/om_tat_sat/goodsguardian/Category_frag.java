@@ -65,7 +65,11 @@ public class Category_frag extends Fragment implements RecyclerviewInterface{
     @Override
     public void onclick(int position, int index) {
         if (index==1){
-
+            Intent intent=new Intent(getContext(),Items_shower.class);
+            intent.putExtra("Category_name",categoryHolders.get(position).getName());
+            intent.putExtra("category_total_itmes",categoryHolders.get(position).getQuantity());
+            Toast.makeText(getContext(),categoryHolders.get(position).getName(), Toast.LENGTH_SHORT).show();
+            startActivity(intent);
         }else {
             AlertDialog.Builder alert =new AlertDialog.Builder(getContext());
             alert.setTitle("DELETE "+categoryHolders.get(position).getName()+"?")
@@ -89,6 +93,12 @@ public class Category_frag extends Fragment implements RecyclerviewInterface{
                     });
             alert.show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        relaunch();
+        super.onResume();
     }
 
     private void relaunch() {
