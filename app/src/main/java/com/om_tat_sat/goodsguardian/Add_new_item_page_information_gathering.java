@@ -95,6 +95,7 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
         quantity=findViewById(R.id.item_quantity_at_add_items);
         datePicker=findViewById(R.id.item_expiry_date_at_add_items);
         take_photo=findViewById(R.id.item_take_photo_at_add_items);
+        take_photo.setVisibility(View.GONE);
         save=findViewById(R.id.save_item_details);
         change=findViewById(R.id.change_item_details);
         choose_photo=findViewById(R.id.item_take_choose_at_add_items);

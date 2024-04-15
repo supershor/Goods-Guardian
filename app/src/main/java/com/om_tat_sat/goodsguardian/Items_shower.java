@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.Toast;
@@ -26,8 +27,12 @@ import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlParameters.Parameters;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Items_shower extends AppCompatActivity implements RecyclerviewInterface{
     Toolbar toolbar;
@@ -60,6 +65,7 @@ public class Items_shower extends AppCompatActivity implements RecyclerviewInter
         recyclerView=findViewById(R.id.recycler);
         arrayList=new ArrayList<>();
         refresh();
+
 
         //tool bar setup
         toolbar=findViewById(R.id.toolsbar);
@@ -121,7 +127,7 @@ public class Items_shower extends AppCompatActivity implements RecyclerviewInter
         for (Items_holder itemsShower:list){
             arrayList.add(itemsShower);
         }
-        Item_recycler itemRecycler=new Item_recycler(arrayList,Items_shower.this,this::onclick);
+        Item_recycler itemRecycler=new Item_recycler(arrayList,Items_shower.this,this::onclick,(new SimpleDateFormat("dd-MM-YYYY", Locale.getDefault())).format(Calendar.getInstance().getTime()));
         recyclerView.setLayoutManager(new LinearLayoutManager(Items_shower.this));
         recyclerView.setAdapter(itemRecycler);
     }

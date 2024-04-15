@@ -179,6 +179,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_25sdp"
+                        android:layout_marginEnd="@dimen/_25sdp"
                         android:text="@string/add_item_photo"
                         android:textStyle="bold"
                         android:textAlignment="viewStart"
@@ -191,6 +192,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <androidx.appcompat.widget.AppCompatButton
+                            android:visibility="gone"
                             android:id="@+id/item_take_photo_at_add_items"
                             android:layout_width="match_parent"
                             android:layout_weight="1"
@@ -207,12 +209,13 @@
                             android:textSize="@dimen/_18sdp"
                             tools:ignore="RtlHardcoded" />
                         <androidx.appcompat.widget.AppCompatButton
+                            android:layout_marginStart="@dimen/_25sdp"
+                            android:layout_marginEnd="@dimen/_25sdp"
                             android:id="@+id/item_take_choose_at_add_items"
                             android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="date"
-                            android:layout_marginEnd="@dimen/_5sdp"
                             android:background="@drawable/less_border_white_background_input_taker"
                             android:hint="@string/choose_photo"
                             android:textAlignment="viewStart"
