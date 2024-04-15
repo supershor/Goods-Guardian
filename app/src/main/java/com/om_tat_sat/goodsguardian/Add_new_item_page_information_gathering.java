@@ -3,17 +3,20 @@ package com.om_tat_sat.goodsguardian;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
@@ -27,6 +30,9 @@ import com.om_tat_sat.goodsguardian.SqlParameters.Parameters;
 import com.om_tat_sat.goodsguardian.model.Category_holder;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -42,6 +48,7 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
 
     androidx.appcompat.widget.AppCompatSpinner spinner;
     AppCompatButton take_photo;
+    Uri uri;
     String issue;
     AppCompatButton save;
     AppCompatButton change;
@@ -121,6 +128,12 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
         spinner.setSelection(31);
 
         //setting on click listeners
+        choose_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenImageChooser();
+            }
+        });
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,26 +149,31 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                             Log.e("ans dbms main --------->>>>",items.getName()+"-"+items.getDescription()+"-"+items.getCategory()+"-"+items.getQuantity()+"-"+items.getExpiry_date()+"-"+items.getImage());
                         }
                     }else{
-                        myDbHandler.addItems(new Items_holder(item_name.getText().toString(),item_description.getText().toString(),Integer.parseInt(quantity.getText().toString()),spinner.getSelectedItem().toString(),datePicker.getDayOfMonth()+"_"+datePicker.getMonth()+"_"+datePicker.getYear(),"img"));
-                        Toast.makeText(Add_new_item_page_information_gathering.this, "Add successful", Toast.LENGTH_SHORT).show();
-                        List<Items_holder> itemsList=myDbHandler.get_all_items_in_sorted_form_without_category(1);
-                        for (Items_holder items:itemsList) {
-                            Log.e("ans dbms main --------->>>>",items.getName()+"-"+items.getDescription()+"-"+items.getCategory()+"-"+items.getQuantity()+"-"+items.getExpiry_date()+"-"+items.getImage());
+                        if (getImg()){
+                            Toast.makeText(Add_new_item_page_information_gathering.this, "Please choose a image.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            myDbHandler.addItems(new Items_holder(item_name.getText().toString(),item_description.getText().toString(),Integer.parseInt(quantity.getText().toString()),spinner.getSelectedItem().toString(),datePicker.getDayOfMonth()+"_"+datePicker.getMonth()+"_"+datePicker.getYear(),getUri()),getUri());
+                            Toast.makeText(Add_new_item_page_information_gathering.this, "Add successful", Toast.LENGTH_SHORT).show();
+                            List<Items_holder> itemsList=myDbHandler.get_all_items_in_sorted_form_without_category(1);
+                            for (Items_holder items:itemsList) {
+                                Log.e("ans dbms main --------->>>>",items.getName()+"-"+items.getDescription()+"-"+items.getCategory()+"-"+items.getQuantity()+"-"+items.getExpiry_date()+"-"+items.getImage());
+                            }
+                            if (Category_MyDbHandler.check_already_exists_or_not("SELECT * FROM "+Parameters.CATEGORY_Table_Name +" WHERE "+Parameters.KEY_NAME+"='"+spinner.getSelectedItem()+"'")){
+                                Log.e( "onClick:---------------", "already exists");
+                                Toast.makeText(Add_new_item_page_information_gathering.this, "Aaaa", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Log.e( "onClick:-------------", "adding exists");
+                                Category_MyDbHandler.addItems(new Category_holder(spinner.getSelectedItem()+"",1));
+                                Toast.makeText(Add_new_item_page_information_gathering.this, "bbbbb", Toast.LENGTH_SHORT).show();
+                            }
+                            List<Category_holder>categoryHolders= Category_MyDbHandler.get_all_items_in_sorted_form_without_category(1);
+                            for (Category_holder categoryMyDbHandler:categoryHolders) {
+                                Log.e("ans dbms category --------->>>>",categoryMyDbHandler.getName()+"-"+categoryMyDbHandler.getQuantity());
+                            }
+                            startActivity(new Intent(Add_new_item_page_information_gathering.this,MainActivity.class));
+                            finishAffinity();
                         }
-                        if (Category_MyDbHandler.check_already_exists_or_not("SELECT * FROM "+Parameters.CATEGORY_Table_Name +" WHERE "+Parameters.KEY_NAME+"='"+spinner.getSelectedItem()+"'")){
-                            Log.e( "onClick:---------------", "already exists");
-                            Toast.makeText(Add_new_item_page_information_gathering.this, "Aaaa", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Log.e( "onClick:-------------", "adding exists");
-                            Category_MyDbHandler.addItems(new Category_holder(spinner.getSelectedItem()+"",1));
-                            Toast.makeText(Add_new_item_page_information_gathering.this, "bbbbb", Toast.LENGTH_SHORT).show();
-                        }
-                        List<Category_holder>categoryHolders= Category_MyDbHandler.get_all_items_in_sorted_form_without_category(1);
-                        for (Category_holder categoryMyDbHandler:categoryHolders) {
-                            Log.e("ans dbms category --------->>>>",categoryMyDbHandler.getName()+"-"+categoryMyDbHandler.getQuantity());
-                        }
-                        startActivity(new Intent(Add_new_item_page_information_gathering.this,MainActivity.class));
-                        finishAffinity();
+
                     }
 
                 }
@@ -167,12 +185,57 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                 if (check_fields()){
                     Toast.makeText(Add_new_item_page_information_gathering.this,issue, Toast.LENGTH_SHORT).show();
                 }else{
-
                     //Items_holder itemsHolder=intent.getExtras("data_about_item_to_be_changed");
                     //Log.e("Add new done-------------------",itemsHolder.toString());
                 }
             }
         });
+    }
+    public void OpenImageChooser(){
+        Intent intent=new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,100);
+    }
+    public boolean getImg(){
+        if (uri==null){
+            OpenImageChooser();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public byte[] getUri(){
+        if (uri==null){
+            OpenImageChooser();
+        }else{
+            try {
+                InputStream inputStream=getContentResolver().openInputStream(uri);
+                byte[] inputData=Utils.getBytes(inputStream);
+                return inputData;
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode==RESULT_OK){
+            if (requestCode==100){
+                if (data!=null){
+                    Toast.makeText(this, "selected", Toast.LENGTH_SHORT).show();
+                    Uri ImageSetter=data.getData();
+                    uri=ImageSetter;
+                    Log.e("URI---------------------",uri.toString());
+                    ImageView imageView=findViewById(R.id.image_setter);
+                    imageView.setImageBitmap(Utils.getImage(getUri()));
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
     public boolean check_fields(){
         issue="";

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.om_tat_sat.goodsguardian.R;
 import com.om_tat_sat.goodsguardian.RecyclerviewInterface;
+import com.om_tat_sat.goodsguardian.Utils;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
         int month=Integer.parseInt(arr[1])+1;
         holder.Expiry_date.setText("Exp. : "+Integer.parseInt(arr[0])+"/"+month+"/"+Integer.parseInt(arr[2]));
         holder.Expiring_in.setText("+30d");
+        holder.imageView.setImageBitmap(Utils.getImage(arrayList.get(position).getImage()));
     }
 
     @Override

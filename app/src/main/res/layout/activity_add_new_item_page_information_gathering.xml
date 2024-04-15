@@ -222,6 +222,16 @@
                             android:textSize="@dimen/_18sdp"/>
                     </LinearLayout>
                 </LinearLayout>
+                <ImageView
+                    android:background="@drawable/less_border_white_background_input_taker"
+                    android:layout_width="match_parent"
+                    android:padding="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:layout_marginLeft="@dimen/_25sdp"
+                    android:layout_marginRight="@dimen/_25sdp"
+                    android:layout_height="@dimen/_200sdp"
+                    android:id="@+id/image_setter"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

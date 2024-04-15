@@ -25,7 +25,7 @@ public class MyDbHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String create="CREATE TABLE "+Parameters.Table_Name+"("+Parameters.KEY_ID+"Integer Primary Key,"+
                 Parameters.KEY_NAME+" Text,"+Parameters.KEY_DESCRIPTION+" Text,"+Parameters.KEY_QUANTITY+" Integer,"
-                +Parameters.KEY_CATEGORY+" Text,"+Parameters.KEY_EXPIRY_DATE+" Text,"+Parameters.KEY_Image+" Text"+")";
+                +Parameters.KEY_CATEGORY+" Text,"+Parameters.KEY_EXPIRY_DATE+" Text,"+Parameters.KEY_Image+" BLOB NOT NULL"+")";
         db.execSQL(create);
     }
 
@@ -33,7 +33,7 @@ public class MyDbHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    public void addItems(Items_holder Items_holder){
+    public void addItems(Items_holder Items_holder,byte[] image){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(Parameters.KEY_NAME,Items_holder.getName());
@@ -41,7 +41,7 @@ public class MyDbHandler extends SQLiteOpenHelper {
         contentValues.put(Parameters.KEY_QUANTITY,Items_holder.getQuantity());
         contentValues.put(Parameters.KEY_CATEGORY,Items_holder.getCategory());
         contentValues.put(Parameters.KEY_EXPIRY_DATE,Items_holder.getExpiry_date());
-        contentValues.put(Parameters.KEY_Image,Items_holder.getImage());
+        contentValues.put(Parameters.KEY_Image,image);
         db.insert(Parameters.Table_Name,null,contentValues);
         db.close();
         Log.e("ans Items_holder addes------","sucessfull");
@@ -77,7 +77,7 @@ public class MyDbHandler extends SQLiteOpenHelper {
                 Items_holder.setQuantity(Integer.parseInt(cursor.getString(3)));
                 Items_holder.setCategory(cursor.getString(4));
                 Items_holder.setExpiry_date(cursor.getString(5));
-                Items_holder.setImage(cursor.getString(6));
+                Items_holder.setImage(cursor.getBlob(6));
                 item_list.add(Items_holder);
             }while (cursor.moveToNext());
 
@@ -110,7 +110,7 @@ public class MyDbHandler extends SQLiteOpenHelper {
                 Items_holder.setQuantity(Integer.parseInt(cursor.getString(3)));
                 Items_holder.setCategory(cursor.getString(4));
                 Items_holder.setExpiry_date(cursor.getString(5));
-                Items_holder.setImage(cursor.getString(6));
+                Items_holder.setImage(cursor.getBlob(6));
                 item_list.add(Items_holder);
             }while (cursor.moveToNext());
 

@@ -7,9 +7,9 @@ public class Items_holder {
     private Integer quantity;
     private String category;
     private String expiry_date;
-    private String image;
+    private byte[] image;
 
-    public Items_holder(int id, String name, String description, Integer quantity, String category, String expiry_date, String image) {
+    public Items_holder(int id, String name, String description, Integer quantity, String category, String expiry_date, byte[] image) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -18,7 +18,7 @@ public class Items_holder {
         this.expiry_date = expiry_date;
         this.image = image;
     }
-    public Items_holder(String name, String description, Integer quantity, String category, String expiry_date, String image) {
+    public Items_holder(String name, String description, Integer quantity, String category, String expiry_date, byte[] image) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
@@ -77,11 +77,11 @@ public class Items_holder {
         this.expiry_date = expiry_date;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 }
