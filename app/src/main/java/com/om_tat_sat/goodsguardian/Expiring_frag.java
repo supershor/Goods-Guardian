@@ -1,6 +1,9 @@
 package com.om_tat_sat.goodsguardian;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,9 +17,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.om_tat_sat.goodsguardian.RecyclerAdapters.Item_recycler;
+import com.om_tat_sat.goodsguardian.RecyclerAdapters.Item_recycler_for_expiring_list;
+import com.om_tat_sat.goodsguardian.SqlHelper.Category_MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
+import com.om_tat_sat.goodsguardian.SqlParameters.Parameters;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class Expiring_frag extends Fragment implements RecyclerviewInterface{
+public class Expiring_frag extends Fragment implements RecyclerviewInterface_for_expiring{
     AppCompatButton expiring_today;
     RecyclerView expiring_today_recycler;
     AppCompatButton expiring_tomorrow;
@@ -178,12 +184,12 @@ public class Expiring_frag extends Fragment implements RecyclerviewInterface{
                 }
             }
         }
-        Item_recycler itemRecycler1=new Item_recycler(one_day,getContext(),this::onclick,curr_date,2);
-        Item_recycler itemRecycler2=new Item_recycler(two_day,getContext(),this::onclick,curr_date,2);
-        Item_recycler itemRecycler3=new Item_recycler(week,getContext(),this::onclick,curr_date,2);
-        Item_recycler itemRecycler4=new Item_recycler(two_week,getContext(),this::onclick,curr_date,2);
-        Item_recycler itemRecycler5=new Item_recycler(month,getContext(),this::onclick,curr_date,2);
-        Item_recycler itemRecycler6=new Item_recycler(more_then_a_month,getContext(),this::onclick,curr_date,2);
+        Item_recycler_for_expiring_list itemRecycler1=new Item_recycler_for_expiring_list(one_day,getContext(),this::onclick,curr_date,2,1);
+        Item_recycler_for_expiring_list itemRecycler2=new Item_recycler_for_expiring_list(two_day,getContext(),this::onclick,curr_date,2,2);
+        Item_recycler_for_expiring_list itemRecycler3=new Item_recycler_for_expiring_list(week,getContext(),this::onclick,curr_date,2,3);
+        Item_recycler_for_expiring_list itemRecycler4=new Item_recycler_for_expiring_list(two_week,getContext(),this::onclick,curr_date,2,4);
+        Item_recycler_for_expiring_list itemRecycler5=new Item_recycler_for_expiring_list(month,getContext(),this::onclick,curr_date,2,5);
+        Item_recycler_for_expiring_list itemRecycler6=new Item_recycler_for_expiring_list(more_then_a_month,getContext(),this::onclick,curr_date,2,6);
         expiring_today_recycler.setAdapter(itemRecycler1);
         expiring_tomorrow_recycler.setAdapter(itemRecycler2);
         expires_in_a_week_7d_recycler.setAdapter(itemRecycler3);
@@ -319,9 +325,61 @@ public class Expiring_frag extends Fragment implements RecyclerviewInterface{
         good_product_30d_recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
     }
-
     @Override
-    public void onclick(int position, int index) {
-
+    public void onclick(int position, int index, int arr_index) {
+        ArrayList<Items_holder>arrayList=new ArrayList<>();
+        if (arr_index==1){
+            arrayList.addAll(one_day);
+        }else if (arr_index==2){
+            arrayList.addAll(two_day);
+        }else if (arr_index==3){
+            arrayList.addAll(week);
+        }else if (arr_index==4){
+            arrayList.addAll(two_week);
+        }else if (arr_index==5){
+            arrayList.addAll(month);
+        }else if (arr_index==6){
+            arrayList.addAll(more_then_a_month);
+        }
+        if (index==2){
+            AlertDialog.Builder alert =new AlertDialog.Builder(getContext());
+            alert.setTitle("Delete"+arrayList.get(position).getName())
+                    .setMessage("This will delete "+arrayList.get(position).getName()+" and all its items.")
+                    .setCancelable(false)
+                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            myDbHandler.delete(Parameters.KEY_NAME+"='"+arrayList.get(position).getName()+"' AND "+Parameters.KEY_CATEGORY+"='"+arrayList.get(position).getCategory()+"' AND "+Parameters.KEY_DESCRIPTION+"='"+arrayList.get(position).getDescription()+"' AND "+Parameters.KEY_EXPIRY_DATE+"='"+arrayList.get(position).getExpiry_date()+"' AND "+Parameters.KEY_QUANTITY+"='"+arrayList.get(position).getQuantity()+"'");
+                            Category_MyDbHandler categoryMyDbHandler=new Category_MyDbHandler(getContext());
+                            categoryMyDbHandler.decrease(arrayList.get(position).getCategory(),Parameters.KEY_NAME+"='"+arrayList.get(position).getCategory()+"'");
+                            Toast.makeText(getContext(), arrayList.get(position).getName()+" delete successful", Toast.LENGTH_SHORT).show();
+                            refresh();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alert.show();
+        }
+        else if (index==3) {
+            Intent intent1=new Intent(getContext(), Add_new_item_page_information_gathering.class);
+            intent1.putExtra("save_or_change",1);
+            intent1.putExtra("name",arrayList.get(position).getName());
+            intent1.putExtra("description",arrayList.get(position).getDescription());
+            intent1.putExtra("quantity",arrayList.get(position).getQuantity());
+            intent1.putExtra("expiry_date",arrayList.get(position).getExpiry_date());
+            intent1.putExtra("img_uri",arrayList.get(position).getImage());
+            intent1.putExtra("category",arrayList.get(position).getCategory());
+            startActivity(intent1);
+        }
+        else if (index==4){
+            Intent intent1=new Intent(getContext(), Big_picture_view.class);
+            intent1.putExtra("img_uri",arrayList.get(position).getImage());
+            startActivity(intent1);
+        }
+        Toast.makeText(getContext(), position+"->"+index, Toast.LENGTH_SHORT).show();
     }
 }

@@ -38,6 +38,25 @@ public class Category_MyDbHandler extends SQLiteOpenHelper {
             database.update(Parameters.CATEGORY_Table_Name,contentValues,Parameters.KEY_NAME+"='"+name+"' AND "+Parameters.KEY_QUANTITY+"='"+quantity+"'",null);
         }
     }
+    public void decrease(String name,String where){
+        int quantity=0;
+        SQLiteDatabase sqLiteDatabase=getReadableDatabase();
+        Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM "+Parameters.CATEGORY_Table_Name+" WHERE "+Parameters.KEY_NAME+"='"+name+"'",null);
+        if (cursor.moveToFirst()){
+            quantity=cursor.getInt(1);
+        }
+        if (quantity-1==0){
+            SQLiteDatabase database=getWritableDatabase();
+            database.delete(Parameters.CATEGORY_Table_Name,where,null);
+            Log.e( "delete:-------------------","delete Successful");
+        }else {
+            SQLiteDatabase database=getWritableDatabase();
+            ContentValues contentValues=new ContentValues();
+            contentValues.put(Parameters.KEY_NAME,name);
+            contentValues.put(Parameters.KEY_QUANTITY,quantity-1);
+            database.update(Parameters.CATEGORY_Table_Name,contentValues,Parameters.KEY_NAME+"='"+name+"' AND "+Parameters.KEY_QUANTITY+"='"+quantity+"'",null);
+        }
+    }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

@@ -1,5 +1,8 @@
 package com.om_tat_sat.goodsguardian;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,10 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.om_tat_sat.goodsguardian.RecyclerAdapters.Item_recycler;
 import com.om_tat_sat.goodsguardian.SqlHelper.Category_MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
+import com.om_tat_sat.goodsguardian.SqlParameters.Parameters;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
 import java.text.SimpleDateFormat;
@@ -167,6 +172,45 @@ public class Expired_frag extends Fragment implements RecyclerviewInterface{
 
     @Override
     public void onclick(int position, int index) {
-
+        if (index==2){
+            AlertDialog.Builder alert =new AlertDialog.Builder(getContext());
+            alert.setTitle("Delete"+final_arr.get(position).getName())
+                    .setMessage("This will delete "+final_arr.get(position).getName()+" and all its items.")
+                    .setCancelable(false)
+                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            myDbHandler.delete(Parameters.KEY_NAME+"='"+final_arr.get(position).getName()+"' AND "+Parameters.KEY_CATEGORY+"='"+final_arr.get(position).getCategory()+"' AND "+Parameters.KEY_DESCRIPTION+"='"+final_arr.get(position).getDescription()+"' AND "+Parameters.KEY_EXPIRY_DATE+"='"+final_arr.get(position).getExpiry_date()+"' AND "+Parameters.KEY_QUANTITY+"='"+final_arr.get(position).getQuantity()+"'");
+                            Category_MyDbHandler categoryMyDbHandler=new Category_MyDbHandler(getContext());
+                            categoryMyDbHandler.decrease(final_arr.get(position).getCategory(),Parameters.KEY_NAME+"='"+final_arr.get(position).getCategory()+"'");
+                            Toast.makeText(getContext(), final_arr.get(position).getName()+" delete successful", Toast.LENGTH_SHORT).show();
+                            refresh();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alert.show();
+        }
+        else if (index==3) {
+            Intent intent1=new Intent(getContext(), Add_new_item_page_information_gathering.class);
+            intent1.putExtra("save_or_change",1);
+            intent1.putExtra("name",final_arr.get(position).getName());
+            intent1.putExtra("description",final_arr.get(position).getDescription());
+            intent1.putExtra("quantity",final_arr.get(position).getQuantity());
+            intent1.putExtra("expiry_date",final_arr.get(position).getExpiry_date());
+            intent1.putExtra("img_uri",final_arr.get(position).getImage());
+            intent1.putExtra("category",final_arr.get(position).getCategory());
+            startActivity(intent1);
+        }
+        else if (index==4){
+            Intent intent1=new Intent(getContext(), Big_picture_view.class);
+            intent1.putExtra("img_uri",final_arr.get(position).getImage());
+            startActivity(intent1);
+        }
+        Toast.makeText(getContext(), position+"->"+index, Toast.LENGTH_SHORT).show();
     }
 }
