@@ -127,7 +127,7 @@ public class Items_shower extends AppCompatActivity implements RecyclerviewInter
         for (Items_holder itemsShower:list){
             arrayList.add(itemsShower);
         }
-        Item_recycler itemRecycler=new Item_recycler(arrayList,Items_shower.this,this::onclick,(new SimpleDateFormat("dd-MM-YYYY", Locale.getDefault())).format(Calendar.getInstance().getTime()));
+        Item_recycler itemRecycler=new Item_recycler(arrayList,Items_shower.this,this::onclick,(new SimpleDateFormat("dd-MM-YYYY", Locale.getDefault())).format(Calendar.getInstance().getTime()),1);
         recyclerView.setLayoutManager(new LinearLayoutManager(Items_shower.this));
         recyclerView.setAdapter(itemRecycler);
     }

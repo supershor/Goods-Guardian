@@ -51,7 +51,7 @@ public class Expired_frag extends Fragment implements RecyclerviewInterface{
                 final_arr.add(static_arr.get(i));
             }
         }
-        Item_recycler itemRecycler=new Item_recycler(final_arr,getContext(),this::onclick,curr_date);
+        Item_recycler itemRecycler=new Item_recycler(final_arr,getContext(),this::onclick,curr_date,2);
         recyclerview.setAdapter(itemRecycler);
     }
     @Override

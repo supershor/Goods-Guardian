@@ -25,9 +25,11 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
     private final RecyclerviewInterface recyclerviewInterface;
     Context context;
     public String curr_date="";
+    int thing;
 
-    public Item_recycler(ArrayList<Items_holder> arrayList, Context context, RecyclerviewInterface recyclerviewInterface,String curr_date) {
+    public Item_recycler(ArrayList<Items_holder> arrayList, Context context, RecyclerviewInterface recyclerviewInterface,String curr_date,int thing) {
         this.arrayList = arrayList;
+        this.thing=thing;
         this.curr_date=curr_date;
         this.recyclerviewInterface=recyclerviewInterface;
         this.context = context;
@@ -45,7 +47,11 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.Name.setText(arrayList.get(position).getName()+"");
-        holder.Desc.setText("Desc. : "+arrayList.get(position).getDescription()+"");
+        if (thing==1){
+            holder.Desc.setText("Desc. : "+arrayList.get(position).getDescription()+"");
+        }else if (thing==2){
+            holder.Desc.setText("Category : "+arrayList.get(position).getCategory()+"");
+        }
         holder.Quantity.setText("Quan. : "+arrayList.get(position).getQuantity()+"");
         String arr[]=arrayList.get(position).getExpiry_date().split("_");
         int month=Integer.parseInt(arr[1])+1;
