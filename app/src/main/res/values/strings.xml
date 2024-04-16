@@ -31,5 +31,11 @@
     <string name="items">Items</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="setting_text_view_in_with_500sdp_so_that_even_if_no_material_is_present_it_stll_fits_takes_up_the_whole_screen_making_it_slideable">setting text view in with 500sdp so that even if no material is present it stll fits/takes up the whole screen making it slideable</string>
+    <string name="setting_text_view_in_with_500sdp_so_that_even_if_no_material_is_present_it_stll_fits_takes_up_the_whole_screen_making_it_slideable">setting text view in with 500sdp so that even if no material is present it still fits/takes up the whole screen making it slide able</string>
+    <string name="expiring_today_1d"><![CDATA[> 😶 Expiring Today ( <=1d )]]></string>
+    <string name="expires_tommorow_2d"><![CDATA[> 😐 EXPIRES TOMORROW( <=2d )]]></string>
+    <string name="expires_in_a_week_7d"><![CDATA[> 🤨 EXPIRES IN A WEEK (<=7d)]]></string>
+    <string name="expires_in_2_week_14d"><![CDATA[> 🙂 EXPIRES IN 2 WEEK (<=14d)]]></string>
+    <string name="expire_in_a_month_30d"><![CDATA[> ☺️ EXPIRE IN A MONTH (<30d)]]></string>
+    <string name="good_product_30d"><![CDATA[> 😍 GOOD PRODUCT (+30d)]]></string>
 </resources>
