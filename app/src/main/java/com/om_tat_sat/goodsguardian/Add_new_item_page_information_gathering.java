@@ -162,10 +162,6 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                         }else{
                             myDbHandler.addItems(new Items_holder(item_name.getText().toString(),item_description.getText().toString(),Integer.parseInt(quantity.getText().toString()),spinner.getSelectedItem().toString(),datePicker.getDayOfMonth()+"_"+datePicker.getMonth()+"_"+datePicker.getYear(),getUri()),getUri());
                             Toast.makeText(Add_new_item_page_information_gathering.this, "Add successful", Toast.LENGTH_SHORT).show();
-                            List<Items_holder> itemsList=myDbHandler.get_all_items_in_sorted_form_without_category(1);
-                            for (Items_holder items:itemsList) {
-                                Log.e("ans dbms main --------->>>>",items.getName()+"-"+items.getDescription()+"-"+items.getCategory()+"-"+items.getQuantity()+"-"+items.getExpiry_date()+"-"+items.getImage());
-                            }
                             if (Category_MyDbHandler.check_already_exists_or_not("SELECT * FROM "+Parameters.CATEGORY_Table_Name +" WHERE "+Parameters.KEY_NAME+"='"+spinner.getSelectedItem()+"'")){
                                 Log.e( "onClick:---------------", "already exists");
                                 Toast.makeText(Add_new_item_page_information_gathering.this, "Aaaa", Toast.LENGTH_SHORT).show();

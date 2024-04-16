@@ -77,17 +77,11 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
             }else{
                 int i=calculate(position);
                 Log.e( "calculate_date_left: -----------","5->"+i);
-                if (i>30){
-                    return "+30d";
-                }
                 return i+"d";
             }
         }else{
             int i=calculate(position);
             Log.e( "calculate_date_left: -----------","6->"+i);
-            if (i>30){
-                return "+30d";
-            }
             return i+"d";
         }
     }
@@ -112,14 +106,8 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
                 else {
                     total+=day_in_month(i,curr_year);
                 }
-                if (total>=31){
-                    Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","2");
-                    return total;
-                }
             }
-        }
-        if (total!=0){
-            Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","6");
+            Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","2");
             return total;
         }
         for (int i=curr_year;i<exp_year;i++){
@@ -129,21 +117,21 @@ public class Item_recycler extends RecyclerView.Adapter<Item_recycler.ViewHolder
                 }else {
                     total+=day_in_month(j,i);
                 }
-                if (total>=31){
-                    Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","3");
-                    return total;
-                }
             }
+            curr_year++;
         }
         if (curr_year==exp_year){
-            for (int i = 1; i <exp_month; i++) {
-                total+=day_in_month(i,curr_year);
-                if (total>=31){
-                    Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","4");
-                    return total;
+            for (int i = 1; i <=exp_month; i++) {
+                if (i==exp_month){
+                    total+=(day_in_month(i,curr_year)-exp_date);
+                }else {
+                    total+=day_in_month(i,curr_year);
                 }
             }
+            Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","4");
+            return total;
         }
+        Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","5");
         return 0;
     }
     public int day_in_month(int month,int year){

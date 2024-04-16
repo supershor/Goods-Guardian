@@ -2,63 +2,171 @@ package com.om_tat_sat.goodsguardian;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Expired_frag#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Expired_frag extends Fragment {
+import com.om_tat_sat.goodsguardian.RecyclerAdapters.Item_recycler;
+import com.om_tat_sat.goodsguardian.SqlHelper.Category_MyDbHandler;
+import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
+import com.om_tat_sat.goodsguardian.model.Items_holder;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.SimpleFormatter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Expired_frag() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Expired_frag.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Expired_frag newInstance(String param1, String param2) {
-        Expired_frag fragment = new Expired_frag();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+public class Expired_frag extends Fragment implements RecyclerviewInterface{
+    MyDbHandler myDbHandler;
+    RecyclerView recyclerview;
+    String curr_date;
+    ArrayList<Items_holder>static_arr=new ArrayList<>();
+    ArrayList<Items_holder>final_arr=new ArrayList<>();
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        myDbHandler=new MyDbHandler(getContext());
+        recyclerview=view.findViewById(R.id.recyclerview);
+        refresh();
+        super.onViewCreated(view, savedInstanceState);
     }
-
+    public void refresh(){
+        static_arr.clear();
+        final_arr.clear();
+        curr_date= new SimpleDateFormat("dd-MM-YYYY", Locale.getDefault()).format(Calendar.getInstance().getTime());
+        List<Items_holder> list=myDbHandler.get_all_items_in_sorted_form_without_category(1);
+        for (Items_holder itemsHolder:list){
+            static_arr.add(itemsHolder);
+        }
+        for (int i = 0; i < static_arr.size(); i++) {
+            if (Integer.parseInt(calculate_date_left(i).replace("d",""))==0){
+                final_arr.add(static_arr.get(i));
+            }
+        }
+        Item_recycler itemRecycler=new Item_recycler(final_arr,getContext(),this::onclick,curr_date);
+        recyclerview.setAdapter(itemRecycler);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_expired_frag, container, false);
+        View view=inflater.inflate(R.layout.fragment_category_frag, container, false);
+        RecyclerView recyclerView1=view.findViewById(R.id.recyclerview);
+        recyclerView1.setLayoutManager(new LinearLayoutManager(getActivity()));
+        return view;
+    }
+    public String calculate_date_left(int position){
+        String exp_date[]=static_arr.get(position).getExpiry_date().split("_");
+        String date[]=curr_date.split("-");
+        Log.e( "calculate_date_left:-------------------",static_arr.get(position).getExpiry_date());
+        Log.e( "calculate_date_left:-------------------",curr_date);
+        if (Integer.parseInt(date[2])>Integer.parseInt(exp_date[2])){
+            Log.e( "calculate_date_left: -----------","1");
+            return "0d";
+        } else if (Integer.parseInt(date[2])==Integer.parseInt(exp_date[2])) {
+            if ((Integer.parseInt(date[1]))>(Integer.parseInt(exp_date[1])+1)){
+                Log.e( "calculate_date_left: -----------",(Integer.parseInt(date[1]))+""+(Integer.parseInt(exp_date[1])+1));
+                Log.e( "calculate_date_left: -----------","2");
+                return "0d";
+            } else if ((Integer.parseInt(date[1]))==(Integer.parseInt(exp_date[1])+1)) {
+                if (Integer.parseInt(date[0])>=Integer.parseInt(exp_date[0])){
+                    Log.e( "calculate_date_left: -----------","3");
+                    return "0d";
+                }else {
+                    Log.e( "calculate_date_left: -----------","4->"+(Integer.parseInt(exp_date[0])-Integer.parseInt(date[0]))+"d");
+                    return Integer.parseInt(exp_date[0])-Integer.parseInt(date[0])+"d";
+                }
+            }else{
+                int i=calculate(position);
+                Log.e( "calculate_date_left: -----------","5->"+i);
+                return i+"d";
+            }
+        }else{
+            int i=calculate(position);
+            Log.e( "calculate_date_left: -----------","6->"+i);
+            return i+"d";
+        }
+    }
+    public int calculate(int position){
+        String exp[]=static_arr.get(position).getExpiry_date().split("_");
+        String date[]=curr_date.split("-");
+        int curr_year=Integer.parseInt(date[2]);
+        int curr_month=(Integer.parseInt(date[1]));
+        int curr_date=Integer.parseInt(date[0]);
+        int exp_year=Integer.parseInt(exp[2]);
+        int exp_month=Integer.parseInt(exp[1])+1;
+        int exp_date=Integer.parseInt(exp[0]);
+        int total=0;
+        Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","1");
+        if (curr_year==exp_year){
+            for (int i = curr_month; i<=exp_month; i++) {
+                if (i==curr_month){
+                    total+=day_in_month(i,curr_year)-curr_date;
+                }else if (i==exp_month){
+                    total+=exp_date;
+                }
+                else {
+                    total+=day_in_month(i,curr_year);
+                }
+            }
+            Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","2");
+            return total;
+        }
+        for (int i=curr_year;i<exp_year;i++){
+            for (int j = curr_month; j <=12; j++) {
+                if (j==curr_month){
+                    total+=day_in_month(j,i)-curr_date;
+                }else {
+                    total+=day_in_month(j,i);
+                }
+            }
+            curr_year++;
+        }
+        if (curr_year==exp_year){
+            for (int i = 1; i<=exp_month; i++) {
+                if (i==exp_month){
+                    total+=(day_in_month(i,curr_year)-exp_date);
+                }else {
+                    total+=day_in_month(i,curr_year);
+                }
+            }
+            Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","4");
+            return total;
+        }
+        Log.e( "calculate: >>>>>>>>>>>>>>>>>>>>>>>","5");
+        return 0;
+    }
+    public int day_in_month(int month,int year){
+        if (year%400==0||year%100!=0&&year%4==0&&month==2){
+            return 30;
+        }
+        switch (month){
+            case 1:return 31;
+            case 2:return 29;
+            case 3:return 31;
+            case 4:return 30;
+            case 5:return 31;
+            case 6:return 30;
+            case 7:return 31;
+            case 8:return 31;
+            case 9:return 30;
+            case 10:return 31;
+            case 11:return 30;
+            case 12:return 31;
+        }
+        return 0;
+    }
+
+    @Override
+    public void onclick(int position, int index) {
+
     }
 }
