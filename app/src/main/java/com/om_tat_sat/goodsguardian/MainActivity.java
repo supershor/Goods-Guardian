@@ -1,14 +1,21 @@
 package com.om_tat_sat.goodsguardian;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.MailTo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -19,13 +26,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.om_tat_sat.goodsguardian.RecyclerAdapters.ViewPagerAdapter;
 
+import java.net.URI;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements RecyclerviewInterface{
     TabLayout tabLayout;
     ViewPager2 viewPager2;
+    FirebaseAuth firebaseAuth;
     ViewPagerAdapter viewPagerAdapter;
     Toolbar toolbar;
     AppCompatButton add_items;
@@ -45,6 +55,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
 
         //initializing
         add_items=findViewById(R.id.add_items);
+        firebaseAuth=FirebaseAuth.getInstance();
+
+        //checking if user is signed in or nor
+        if (firebaseAuth.getCurrentUser()==null){
+            startActivity(new Intent(MainActivity.this, Loading_Page.class));
+            finishAffinity();
+        }
 
         //tool bar setup
         toolbar=findViewById(R.id.toolsbar);
@@ -101,5 +118,80 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
     @Override
     public void onclick(int position, int index) {
         Toast.makeText(this,position+"->"+index, Toast.LENGTH_SHORT).show();
+    }
+    public void upload_data_and_logout(){
+        upload_data();
+        startActivity(new Intent(MainActivity.this, Loading_Page.class));
+        finishAffinity();
+    }
+    public void upload_data(){
+        Toast.makeText(this, "uploading", Toast.LENGTH_SHORT).show();
+    }
+    public void download_data(){
+        Toast.makeText(this, "download", Toast.LENGTH_SHORT).show();
+    }
+    public void notifications(){
+        Toast.makeText(this, "notifications", Toast.LENGTH_SHORT).show();
+    }
+    public void search(){
+        Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
+    }
+    public void sort(){
+        Toast.makeText(this, "sort", Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId()==R.id.logout){
+            AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("Logout")
+                    .setMessage("Are you sure you want to Logout ?\nWe recommend uploading data before Logout.")
+                    .setPositiveButton("Save data", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            upload_data_and_logout();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                            .setNeutralButton("Don't Save", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    firebaseAuth.signOut();
+                                    startActivity(new Intent(MainActivity.this, Loading_Page.class));
+                                    finishAffinity();
+                                }
+                            });
+            builder.show();
+        }
+        else if (item.getItemId()==R.id.report_error){
+            Intent intent=new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse(MailTo.MAILTO_SCHEME));
+            intent.putExtra(Intent.EXTRA_EMAIL,new String[]{"supershor.cp@gmail.com"});
+            intent.putExtra(Intent.EXTRA_SUBJECT,"Report error on Goods Guardian.");
+            startActivity(intent);
+        }else if (item.getItemId()==R.id.contact_owner){
+            Intent intent=new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse(MailTo.MAILTO_SCHEME));
+            intent.putExtra(Intent.EXTRA_EMAIL,new String[]{"supershor.cp@gmail.com"});
+            intent.putExtra(Intent.EXTRA_SUBJECT,"Contact owner of Goods Guardian.");
+            startActivity(intent);
+        }else if(item.getItemId()==R.id.upload){
+            upload_data();
+        }else if(item.getItemId()==R.id.download){
+            download_data();
+        }else if (item.getItemId()==R.id.notifications){
+            notifications();
+        }else if (item.getItemId()==R.id.sort){
+            sort();
+        }else if (item.getItemId()==R.id.search){
+            search();
+        }
+        Toast.makeText(this, "item", Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
     }
 }

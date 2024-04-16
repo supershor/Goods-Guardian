@@ -38,4 +38,13 @@
     <string name="expires_in_2_week_14d"><![CDATA[> 🙂 EXPIRES IN 2 WEEK (<=14d)]]></string>
     <string name="expire_in_a_month_30d"><![CDATA[> ☺️ EXPIRE IN A MONTH (<30d)]]></string>
     <string name="good_product_30d"><![CDATA[> 😍 GOOD PRODUCT (+30d)]]></string>
+    <string name="contact_owner">Contact Owner</string>
+    <string name="download">Download</string>
+    <string name="refresh">Refresh</string>
+    <string name="logout">Logout</string>
+    <string name="notifications">Notifications</string>
+    <string name="search">Search</string>
+    <string name="report_error">Report Error</string>
+    <string name="sort">Sort</string>
+    <string name="upload">Upload</string>
 </resources>
