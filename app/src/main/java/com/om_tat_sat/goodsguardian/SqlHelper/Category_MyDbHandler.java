@@ -70,6 +70,36 @@ public class Category_MyDbHandler extends SQLiteOpenHelper {
         db.close();
         Log.e("ans Items_holder addes------","sucessfull");
     }
+    public void addItems_if_not_exists(Category_holder categoryHolder,String query){
+        if (only_check(query)){
+            update_only(categoryHolder.getName(),categoryHolder.getQuantity());
+        }else {
+            SQLiteDatabase db=this.getWritableDatabase();
+            ContentValues contentValues=new ContentValues();
+            contentValues.put(Parameters.KEY_NAME,categoryHolder.getName());
+            contentValues.put(Parameters.KEY_QUANTITY,categoryHolder.getQuantity());
+            db.insert(Parameters.CATEGORY_Table_Name,null,contentValues);
+            db.close();
+            Log.e("ans Items_holder addes------","sucessfull");
+        }
+    }
+    public void update_only(String name, int quantity){
+        SQLiteDatabase database=getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(Parameters.KEY_NAME,name);
+        contentValues.put(Parameters.KEY_QUANTITY,quantity);
+        database.update(Parameters.CATEGORY_Table_Name,contentValues,Parameters.KEY_NAME+"='"+name+"'",null);
+    }
+    public boolean only_check(String query){
+        SQLiteDatabase database=getReadableDatabase();
+        Cursor cursor=database.rawQuery(query,null);
+        Log.e("check_already_exists_or_not:---",cursor.toString());
+        Log.e("check_already_exists_or_not:---", String.valueOf(Boolean.valueOf(cursor==null)));
+        if (cursor.moveToFirst()){
+            return true;
+        }
+        return false;
+    }
     public List<Category_holder> get_all_items_in_sorted_form_without_category(int code){
         List<Category_holder>categoryHolders=new ArrayList<>();
         SQLiteDatabase db=getReadableDatabase();

@@ -111,6 +111,11 @@ public class MyDbHandler extends SQLiteOpenHelper {
         sqLiteDatabase.update(Parameters.Table_Name,contentValues,query,null);
         Log.e("updates----------------------------","update successful");
     }
+    public int total_items(){
+        SQLiteDatabase sqLiteDatabase=getWritableDatabase();
+        Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM "+Parameters.Table_Name,null);
+        return cursor.getCount();
+    }
     public List<Items_holder> get_all_items_in_sorted_form_without_category(int code){
         List<Items_holder>item_list=new ArrayList<>();
         SQLiteDatabase db=getReadableDatabase();
