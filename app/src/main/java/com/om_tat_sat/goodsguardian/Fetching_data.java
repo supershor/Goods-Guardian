@@ -85,17 +85,22 @@ public class Fetching_data extends AppCompatActivity {
             upload_data();
         }else if (intent.getIntExtra("upload_or_download",1)==2){
             ongoing=false;
-            databaseReference.child("Total Count").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    total=Integer.parseInt(snapshot.getValue()+"");
-                }
+            if (!ongoing){
+                databaseReference.child("Total Count").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.getValue()+""!=null){
+                            total=Integer.parseInt(snapshot.getValue()+"");
+                        }
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(Fetching_data.this,error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        total=0;
+                        Toast.makeText(Fetching_data.this,error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
             download_data();
         }else if (intent.getIntExtra("upload_or_download",1)==3){
             ongoing=true;
@@ -121,7 +126,7 @@ public class Fetching_data extends AppCompatActivity {
         databaseReference.child("Total Count").setValue(myDbHandler.total_items());
         i=0;
         if (list.isEmpty()){
-            Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Empty Nothing To Upload", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Fetching_data.this,Loading_Page.class));
             firebaseAuth.signOut();
             finishAffinity();
@@ -188,7 +193,7 @@ public class Fetching_data extends AppCompatActivity {
         databaseReference.child("Total Count").setValue(myDbHandler.total_items());
         i=0;
         if (list.isEmpty()){
-            Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Empty Nothing To Upload", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Fetching_data.this,MainActivity.class));
             finishAffinity();
         }
@@ -246,6 +251,12 @@ public class Fetching_data extends AppCompatActivity {
                     Log.e( "onDataChange:0000000000000000000","snapshot id null");
                     Log.e( "onDataChange:0000000000000000000",snapshot.toString());
                     Log.e( "onDataChange:0000000000000000000","="+snapshot.getValue()+"-");
+                    if (total==0){
+                        Toast.makeText(Fetching_data.this, "Nothing To Download", Toast.LENGTH_SHORT).show();
+                        Log.e("Item download null", "Data Download Complete item found null");
+                        startActivity(new Intent(Fetching_data.this,MainActivity.class));
+                        finishAffinity();
+                    }
                     if (snapshot.getValue()==null||snapshot.getValue().equals("")|| snapshot.getValue().toString().isEmpty()){
                         Toast.makeText(Fetching_data.this, "Data Download Complete", Toast.LENGTH_SHORT).show();
                         Log.e("Item download null", "Data Download Complete item found null");
