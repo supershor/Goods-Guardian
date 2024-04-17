@@ -13,6 +13,9 @@
         android:theme="@style/Theme.GoodsGuardian"
         tools:targetApi="31">
         <activity
+            android:name=".Fetching_data"
+            android:exported="false" />
+        <activity
             android:name=".Big_picture_view"
             android:exported="false" />
         <activity

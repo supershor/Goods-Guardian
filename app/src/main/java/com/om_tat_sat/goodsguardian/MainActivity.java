@@ -27,6 +27,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.om_tat_sat.goodsguardian.RecyclerAdapters.ViewPagerAdapter;
 
 import java.net.URI;
@@ -119,17 +121,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
     public void onclick(int position, int index) {
         Toast.makeText(this,position+"->"+index, Toast.LENGTH_SHORT).show();
     }
-    public void upload_data_and_logout(){
-        upload_data();
-        startActivity(new Intent(MainActivity.this, Loading_Page.class));
-        finishAffinity();
-    }
-    public void upload_data(){
-        Toast.makeText(this, "uploading", Toast.LENGTH_SHORT).show();
-    }
-    public void download_data(){
-        Toast.makeText(this, "download", Toast.LENGTH_SHORT).show();
-    }
     public void notifications(){
         Toast.makeText(this, "notifications", Toast.LENGTH_SHORT).show();
     }
@@ -149,7 +140,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
                     .setPositiveButton("Save data", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            upload_data_and_logout();
+                            Intent intent=new Intent(MainActivity.this,Fetching_data.class);
+                            intent.putExtra("upload_or_download",3);
+                            startActivity(intent);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -158,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
                             dialog.dismiss();
                         }
                     })
-                            .setNeutralButton("Don't Save", new DialogInterface.OnClickListener() {
+                            .setNeutralButton("Don't Save Data", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     firebaseAuth.signOut();
@@ -181,9 +174,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
             intent.putExtra(Intent.EXTRA_SUBJECT,"Contact owner of Goods Guardian.");
             startActivity(intent);
         }else if(item.getItemId()==R.id.upload){
-            upload_data();
+            Intent intent=new Intent(MainActivity.this,Fetching_data.class);
+            intent.putExtra("upload_or_download",1);
+            startActivity(intent);
         }else if(item.getItemId()==R.id.download){
-            download_data();
+            Intent intent=new Intent(MainActivity.this,Fetching_data.class);
+            intent.putExtra("upload_or_download",2);
+            startActivity(intent);
         }else if (item.getItemId()==R.id.notifications){
             notifications();
         }else if (item.getItemId()==R.id.sort){

@@ -47,4 +47,5 @@
     <string name="report_error">Report Error</string>
     <string name="sort">Sort</string>
     <string name="upload">Upload</string>
+    <string name="please_don_t_prees_any_button_or_exit_the_app">Please don\'t prees any button or exit the app.</string>
 </resources>
