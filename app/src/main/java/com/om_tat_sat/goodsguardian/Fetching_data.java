@@ -1,6 +1,7 @@
 package com.om_tat_sat.goodsguardian;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,10 +14,19 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.om_tat_sat.goodsguardian.SqlHelper.Category_MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
 import com.om_tat_sat.goodsguardian.model.Category_holder;
@@ -25,6 +35,7 @@ import com.om_tat_sat.goodsguardian.model.Items_holder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.security.auth.login.LoginException;
@@ -32,12 +43,15 @@ import javax.security.auth.login.LoginException;
 public class Fetching_data extends AppCompatActivity {
 
     Intent intent;
+    byte[] bytes_images;
     int i=0;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     Category_MyDbHandler categoryMyDbHandler;
     MyDbHandler myDbHandler;
     FirebaseAuth firebaseAuth;
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +71,8 @@ public class Fetching_data extends AppCompatActivity {
         }
         categoryMyDbHandler=new Category_MyDbHandler(Fetching_data.this);
         myDbHandler=new MyDbHandler(Fetching_data.this);
+        firebaseStorage=FirebaseStorage.getInstance("gs://goods-guardian-216f8.appspot.com");
+        storageReference=firebaseStorage.getReference().child("USER DATA").child(firebaseAuth.getCurrentUser().getUid()).child("Items");
         firebaseDatabase=FirebaseDatabase.getInstance("https://goods-guardian-216f8-default-rtdb.asia-southeast1.firebasedatabase.app/");
         databaseReference=firebaseDatabase.getReference().child("USER DATA").child(firebaseAuth.getCurrentUser().getUid()).child("Items");
 
@@ -67,13 +83,76 @@ public class Fetching_data extends AppCompatActivity {
         }else if (intent.getIntExtra("upload_or_download",1)==2){
             download_data();
         }else if (intent.getIntExtra("upload_or_download",1)==3){
+            Log.e( "onCreate: ","3 started");
             upload_data_and_logout();
         }
     }
     public void upload_data_and_logout(){
-        upload_data();
-        startActivity(new Intent(Fetching_data.this, Loading_Page.class));
-        finishAffinity();
+        List<Items_holder>list=myDbHandler.get_all_items_in_sorted_form_without_category(1);
+        databaseReference.setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.e( "Upload started----------------------","started");
+                            Toast.makeText(Fetching_data.this, "Upload started", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Log.e( "Upload started----------------------", Objects.requireNonNull(task.getException()).toString());
+                            Toast.makeText(Fetching_data.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        i=0;
+        if (list.isEmpty()){
+            Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Fetching_data.this,Loading_Page.class));
+            firebaseAuth.signOut();
+            finishAffinity();
+        }
+        for (Items_holder itemsHolder:list){
+            String name= itemsHolder.getName()+itemsHolder.getExpiry_date()+itemsHolder.getQuantity()+itemsHolder.getCategory()+itemsHolder.getDescription();
+            HashMap<String,String>hashMap=new HashMap<>();
+            hashMap.put("Name",itemsHolder.getName());
+            hashMap.put("Quantity",itemsHolder.getQuantity()+"");
+            hashMap.put("Expiry_date",itemsHolder.getExpiry_date());
+            hashMap.put("Description",itemsHolder.getDescription());
+            hashMap.put("Category",itemsHolder.getCategory());
+            databaseReference.child(name).setValue(hashMap)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Log.e( "hit------------------- ",i+"");
+                                i++;
+                                storageReference.child(name).putBytes(itemsHolder.getImage())
+                                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    Log.e( "Image Upload started----------------------","started");
+                                                    Log.e( "Image Upload started----------------------",i+"==i");
+                                                    Log.e( "Image Upload started----------------------",list.size()+"list.size()");
+                                                    if (i==list.size()){
+                                                        Log.e( "Image Upload started----------------------","i");
+                                                        Toast.makeText(Fetching_data.this,i+" Items Uploaded successful ", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(Fetching_data.this,"Log out done", Toast.LENGTH_SHORT).show();
+                                                        startActivity(new Intent(Fetching_data.this, Loading_Page.class));
+                                                        firebaseAuth.signOut();
+                                                        finishAffinity();
+                                                    }
+                                                }else {
+                                                    Toast.makeText(Fetching_data.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            }else {
+                                Log.e("ERROR -------------------------------------",task.getException().toString());
+                                Toast.makeText(Fetching_data.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
     public void upload_data(){
         List<Items_holder>list=myDbHandler.get_all_items_in_sorted_form_without_category(1);
@@ -90,7 +169,13 @@ public class Fetching_data extends AppCompatActivity {
                         }
                     }
                 });
+
         i=0;
+        if (list.isEmpty()){
+            Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Fetching_data.this,MainActivity.class));
+            finishAffinity();
+        }
         for (Items_holder itemsHolder:list){
             String name= itemsHolder.getName()+itemsHolder.getExpiry_date()+itemsHolder.getQuantity()+itemsHolder.getCategory()+itemsHolder.getDescription();
             HashMap<String,String>hashMap=new HashMap<>();
@@ -99,26 +184,88 @@ public class Fetching_data extends AppCompatActivity {
             hashMap.put("Expiry_date",itemsHolder.getExpiry_date());
             hashMap.put("Description",itemsHolder.getDescription());
             hashMap.put("Category",itemsHolder.getCategory());
-            databaseReference.child(name).child("name").setValue(hashMap)
+            databaseReference.child(name).setValue(hashMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
+                                Log.e( "hit------------------- ",i+"");
                                 i++;
-                                if (i==list.size()-1){
-                                    Toast.makeText(Fetching_data.this,i+" Items Uploaded successful ", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(Fetching_data.this,MainActivity.class));
-                                    finishAffinity();
-                                }
+                                storageReference.child(name).putBytes(itemsHolder.getImage())
+                                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    Log.e( "Image Upload started----------------------","started");
+                                                    Log.e( "Image Upload started----------------------",i+"==i");
+                                                    Log.e( "Image Upload started----------------------",list.size()+"list.size()");
+                                                    if (i==list.size()){
+                                                        Log.e( "Image Upload started----------------------","i");
+                                                        Toast.makeText(Fetching_data.this,i+" Items Uploaded successful ", Toast.LENGTH_SHORT).show();
+                                                        startActivity(new Intent(Fetching_data.this, MainActivity.class));
+                                                        finishAffinity();
+                                                    }
+                                                }else {
+                                                    Toast.makeText(Fetching_data.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
                             }else {
                                 Log.e("ERROR -------------------------------------",task.getException().toString());
                                 Toast.makeText(Fetching_data.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
+                            Log.e( "end------------------- ",i+"");
                         }
                     });
         }
+
     }
     public void download_data(){
+        HashMap<String,Integer>hashMap=new HashMap<String, Integer>();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.e( "onDataChange:0000000000000000000","snapshot id null");
+                if (snapshot.getValue()!=null){
+                    Log.e( "onDataChange:0000000000000000000",snapshot.toString());
+                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        bytes_images=null;
+                        download_image(dataSnapshot.getKey());
+                        if (bytes_images!=null){
+                            Items_holder itemsHolder=new Items_holder(dataSnapshot.child("Name").getValue().toString(),dataSnapshot.child("Description").getValue().toString(),Integer.parseInt(dataSnapshot.child("Quantity").getValue()+""),dataSnapshot.child("Category").getValue().toString(),dataSnapshot.child("Expiry_date").getValue().toString(),bytes_images);
+                            myDbHandler.addItems(itemsHolder,bytes_images);
+                        }
+                        hashMap.put(dataSnapshot.child("Category").getValue().toString(),1+hashMap.getOrDefault(dataSnapshot.child("Category").getValue().toString(),0));
+                    }
+                    for (Map.Entry<String,Integer> entry:hashMap.entrySet()){
+                        categoryMyDbHandler.addItems(new Category_holder(entry.getKey(),entry.getValue()));
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e( "Data download cancel ",error.toString());
+                Toast.makeText(Fetching_data.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
         Toast.makeText(this, "download", Toast.LENGTH_SHORT).show();
+    }
+
+    private void download_image(String key) {
+        bytes_images=null;
+        storageReference.child(key).getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                bytes_images=bytes;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e( "Image download failed",e.toString());
+                Toast.makeText(Fetching_data.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
