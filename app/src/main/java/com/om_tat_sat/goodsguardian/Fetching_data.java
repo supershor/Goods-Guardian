@@ -29,6 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.om_tat_sat.goodsguardian.SqlHelper.Category_MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
+import com.om_tat_sat.goodsguardian.SqlParameters.Parameters;
 import com.om_tat_sat.goodsguardian.model.Category_holder;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
@@ -43,7 +44,7 @@ import javax.security.auth.login.LoginException;
 public class Fetching_data extends AppCompatActivity {
 
     Intent intent;
-    byte[] bytes_images;
+    Boolean ongoing;
     int i=0;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -79,10 +80,13 @@ public class Fetching_data extends AppCompatActivity {
 
         //setting condition to follow which code on arrival
         if (intent.getIntExtra("upload_or_download",1)==1){
+            ongoing=true;
             upload_data();
         }else if (intent.getIntExtra("upload_or_download",1)==2){
+            ongoing=false;
             download_data();
         }else if (intent.getIntExtra("upload_or_download",1)==3){
+            ongoing=true;
             Log.e( "onCreate: ","3 started");
             upload_data_and_logout();
         }
@@ -225,23 +229,43 @@ public class Fetching_data extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.e( "onDataChange:0000000000000000000","snapshot id null");
-                if (snapshot.getValue()!=null){
+                if (!ongoing){
+                    Log.e( "onDataChange:0000000000000000000","snapshot id null");
                     Log.e( "onDataChange:0000000000000000000",snapshot.toString());
-                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                        bytes_images=null;
-                        download_image(dataSnapshot.getKey());
-                        if (bytes_images!=null){
-                            Items_holder itemsHolder=new Items_holder(dataSnapshot.child("Name").getValue().toString(),dataSnapshot.child("Description").getValue().toString(),Integer.parseInt(dataSnapshot.child("Quantity").getValue()+""),dataSnapshot.child("Category").getValue().toString(),dataSnapshot.child("Expiry_date").getValue().toString(),bytes_images);
-                            myDbHandler.addItems(itemsHolder,bytes_images);
+                    Log.e( "onDataChange:0000000000000000000","="+snapshot.getValue()+"-");
+                    if (snapshot.getValue()==null||snapshot.getValue().equals("")|| snapshot.getValue().toString().isEmpty()){
+                        Toast.makeText(Fetching_data.this, "Data Download Complete", Toast.LENGTH_SHORT).show();
+                        Log.e("Item download null", "Data Download Complete item found null");
+                        startActivity(new Intent(Fetching_data.this,MainActivity.class));
+                        finishAffinity();
+                    }else{
+                        Log.e( "onDataChange:0000000000000000000",snapshot.toString());
+                        for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                            storageReference.child(dataSnapshot.getKey()+"").getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    Log.e( "onSuccess: item add-------------",dataSnapshot.toString());
+                                    Items_holder itemsHolder=new Items_holder(dataSnapshot.child("Name").getValue().toString(),dataSnapshot.child("Description").getValue().toString(),Integer.parseInt(dataSnapshot.child("Quantity").getValue()+""),dataSnapshot.child("Category").getValue().toString(),dataSnapshot.child("Expiry_date").getValue().toString());
+                                    itemsHolder.setImage(bytes);
+                                    String query="SELECT * FROM "+ Parameters.Table_Name+" WHERE "+Parameters.KEY_NAME+"='"+itemsHolder.getName()+"'"+" AND "+Parameters.KEY_CATEGORY+"='"+itemsHolder.getCategory()+"' AND "+ Parameters.KEY_QUANTITY+"='"+itemsHolder.getQuantity()+"'AND "+Parameters.KEY_EXPIRY_DATE+"='"+itemsHolder.getExpiry_date()+"'";
+                                    myDbHandler.addItems_if_does_not_exists(itemsHolder,bytes,query);
+                                    hashMap.put(dataSnapshot.child("Category").getValue().toString(),1+hashMap.getOrDefault(dataSnapshot.child("Category").getValue().toString(),0));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e( "Image download failed",e.toString());
+                                    Toast.makeText(Fetching_data.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-                        hashMap.put(dataSnapshot.child("Category").getValue().toString(),1+hashMap.getOrDefault(dataSnapshot.child("Category").getValue().toString(),0));
-                    }
-                    for (Map.Entry<String,Integer> entry:hashMap.entrySet()){
-                        categoryMyDbHandler.addItems(new Category_holder(entry.getKey(),entry.getValue()));
+                        Log.e( "onDataChange: -------------------","Running done1");
+                        for (Map.Entry<String,Integer> entry:hashMap.entrySet()){
+                            categoryMyDbHandler.addItems(new Category_holder(entry.getKey(),entry.getValue()));
+                        }
+                        Log.e( "onDataChange: -------------------","Running done2");
                     }
                 }
-
             }
 
             @Override
@@ -253,19 +277,4 @@ public class Fetching_data extends AppCompatActivity {
         Toast.makeText(this, "download", Toast.LENGTH_SHORT).show();
     }
 
-    private void download_image(String key) {
-        bytes_images=null;
-        storageReference.child(key).getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                bytes_images=bytes;
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e( "Image download failed",e.toString());
-                Toast.makeText(Fetching_data.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }

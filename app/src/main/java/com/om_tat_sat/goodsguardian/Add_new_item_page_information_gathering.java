@@ -148,10 +148,10 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                 if (check_fields()){
                     Toast.makeText(Add_new_item_page_information_gathering.this,issue, Toast.LENGTH_SHORT).show();
                 }else{
-                    String query="SELECT * FROM "+ Parameters.Table_Name+" WHERE "+Parameters.KEY_NAME+"='"+item_name.getText().toString()+"'"+" AND "+Parameters.KEY_CATEGORY+"='"+spinner.getSelectedItem().toString()+"' AND "+Parameters.KEY_QUANTITY+"='"+quantity.getText().toString()+"'";
+                    String query="SELECT * FROM "+ Parameters.Table_Name+" WHERE "+Parameters.KEY_NAME+"='"+item_name.getText().toString()+"'"+" AND "+Parameters.KEY_CATEGORY+"='"+spinner.getSelectedItem().toString()+"' AND "+Parameters.KEY_QUANTITY+"='"+quantity.getText().toString()+"' AND "+Parameters.KEY_EXPIRY_DATE+"='"+expiry_date+"'";
                     if (myDbHandler.check_already_exists_or_not(query)){
                         Toast.makeText(Add_new_item_page_information_gathering.this, "Item with already exist.", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(Add_new_item_page_information_gathering.this, "Try changing name, quantity or expiry date.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Add_new_item_page_information_gathering.this, "Try changing name, category, quantity or expiry date.", Toast.LENGTH_SHORT).show();
                         List<Items_holder> itemsList=myDbHandler.get_all_items_in_sorted_form_without_category(1);
                         for (Items_holder items:itemsList) {
                             Log.e("ans dbms main --------->>>>",items.getName()+"-"+items.getDescription()+"-"+items.getCategory()+"-"+items.getQuantity()+"-"+items.getExpiry_date()+"-"+items.getImage());

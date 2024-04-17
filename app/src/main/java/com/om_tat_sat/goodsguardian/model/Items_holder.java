@@ -26,6 +26,16 @@ public class Items_holder {
         this.expiry_date = expiry_date;
         this.image = image;
     }
+    public Items_holder(byte[] image) {
+        this.image = image;
+    }
+    public Items_holder(String name, String description, Integer quantity, String category, String expiry_date) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.category = category;
+        this.expiry_date = expiry_date;
+    }
     public Items_holder(){
 
     }

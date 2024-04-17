@@ -43,6 +43,13 @@ public class Expired_frag extends Fragment implements RecyclerviewInterface{
         refresh();
         super.onViewCreated(view, savedInstanceState);
     }
+
+    @Override
+    public void onResume() {
+        refresh();
+        super.onResume();
+    }
+
     public void refresh(){
         static_arr.clear();
         final_arr.clear();

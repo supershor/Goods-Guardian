@@ -46,6 +46,21 @@ public class MyDbHandler extends SQLiteOpenHelper {
         db.close();
         Log.e("ans Items_holder addes------","sucessfull");
     }
+    public void addItems_if_does_not_exists(Items_holder Items_holder,byte[] image,String query){
+        if (!check_already_exists_or_not(query)){
+            SQLiteDatabase db=this.getWritableDatabase();
+            ContentValues contentValues=new ContentValues();
+            contentValues.put(Parameters.KEY_NAME,Items_holder.getName());
+            contentValues.put(Parameters.KEY_DESCRIPTION,Items_holder.getDescription());
+            contentValues.put(Parameters.KEY_QUANTITY,Items_holder.getQuantity());
+            contentValues.put(Parameters.KEY_CATEGORY,Items_holder.getCategory());
+            contentValues.put(Parameters.KEY_EXPIRY_DATE,Items_holder.getExpiry_date());
+            contentValues.put(Parameters.KEY_Image,image);
+            db.insert(Parameters.Table_Name,null,contentValues);
+            db.close();
+            Log.e("ans Items_holder addes------","sucessfull");
+        }
+    }
     public void delete(String where){
         SQLiteDatabase database=getWritableDatabase();
         database.delete(Parameters.Table_Name,where,null);
