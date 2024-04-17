@@ -183,10 +183,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
             startActivity(intent);
         }else if (item.getItemId()==R.id.notifications){
             notifications();
-        }else if (item.getItemId()==R.id.sort){
-            sort();
-        }else if (item.getItemId()==R.id.search){
-            search();
         }
         Toast.makeText(this, "item", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);

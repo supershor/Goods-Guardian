@@ -6,7 +6,5 @@
     <item app:showAsAction="withText" android:title="@string/logout" android:id="@+id/logout" android:icon="@drawable/logout"/>
     <item app:showAsAction="withText" android:title="@string/notifications" android:id="@+id/notifications" android:icon="@drawable/notification_icon"/>
     <item app:showAsAction="withText" android:title="@string/report_error" android:id="@+id/report_error" android:icon="@drawable/problem"/>
-    <item app:showAsAction="withText" android:title="@string/search" android:id="@+id/search" android:icon="@drawable/search_icon"/>
-    <item app:showAsAction="withText" android:title="@string/sort" android:id="@+id/sort" android:icon="@drawable/sort"/>
     <item app:showAsAction="withText" android:title="@string/upload" android:id="@+id/upload" android:icon="@drawable/upload"/>
 </menu>

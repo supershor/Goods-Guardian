@@ -131,9 +131,4 @@ public class Items_shower extends AppCompatActivity implements RecyclerviewInter
         recyclerView.setLayoutManager(new LinearLayoutManager(Items_shower.this));
         recyclerView.setAdapter(itemRecycler);
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        new MenuInflater(Items_shower.this).inflate(R.menu.main_menu,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 }
