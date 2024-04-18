@@ -91,6 +91,7 @@ public class Fetching_data extends AppCompatActivity {
             should_run=false;
         }else if (intent.getIntExtra("upload_or_download",1)==2){
             ongoing=false;
+            should_run=false;
             if (!ongoing){
                 databaseReference.child("Total Count").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -296,6 +297,8 @@ public class Fetching_data extends AppCompatActivity {
                                             hashMap.put(dataSnapshot.child("Category").getValue().toString(),1+hashMap.getOrDefault(dataSnapshot.child("Category").getValue().toString(),0));
                                             i++;
                                             if (i==total){
+                                                ongoing=true;
+                                                should_run=true;
                                                 Log.e( "onDataChange: -------------------","Running done1");
                                                 for (Map.Entry<String,Integer> entry:hashMap.entrySet()){
                                                     categoryMyDbHandler.addItems_if_not_exists(new Category_holder(entry.getKey(),entry.getValue()),"SELECT * FROM "+Parameters.CATEGORY_Table_Name+" WHERE "+Parameters.KEY_NAME+"='"+entry.getKey()+"'");
