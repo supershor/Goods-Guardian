@@ -1,10 +1,13 @@
 package com.om_tat_sat.goodsguardian;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -24,12 +27,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
+import com.om_tat_sat.goodsguardian.Image_compressers.Image_reducer;
 import com.om_tat_sat.goodsguardian.SqlHelper.Category_MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlHelper.MyDbHandler;
 import com.om_tat_sat.goodsguardian.SqlParameters.Parameters;
 import com.om_tat_sat.goodsguardian.model.Category_holder;
 import com.om_tat_sat.goodsguardian.model.Items_holder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,12 +84,12 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
 
         //checking is the user is signed in or not
         firebaseAuth=FirebaseAuth.getInstance();
-        /*
+
         if (firebaseAuth.getCurrentUser()==null){
             startActivity(new Intent(Add_new_item_page_information_gathering.this,Loading_Page.class));
             finishAffinity();
         }
-         */
+
 
         //initializing elements
         textView=findViewById(R.id.spinner_shower_tv);
@@ -238,12 +243,19 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                     Toast.makeText(this, "selected", Toast.LENGTH_SHORT).show();
                     Uri ImageSetter=data.getData();
                     uri=ImageSetter;
-                    Log.e("URI---------------------",uri.toString());
-                    imageView.setImageBitmap(Utils.getImage(getUri()));
+                    Bitmap bitmap=Image_reducer.reduceBitmapSize(Utils.getImage(getUri()),1024*1024);
+                    imageView.setImageBitmap(bitmap);
+                    uri=getImageUri(Add_new_item_page_information_gathering.this,bitmap);
                 }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
     public boolean check_fields(){
         issue="";
@@ -256,6 +268,26 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
         }else if (quantity.getText()==null||quantity.getText().toString().isEmpty()){
             issue="Please enter item quantity";
             return true;
+        } else if (item_name.getText().toString().contains(".")) {
+            issue="Item name cannot contain ->  .  <- in it";return true;
+        }else if (item_name.getText().toString().contains("#")) {
+            issue="Item name cannot contain ->  #  <- in it";return true;
+        }else if (item_name.getText().toString().contains("$")) {
+            issue="Item name cannot contain ->  $  <- in it";return true;
+        }else if (item_name.getText().toString().contains("[")) {
+            issue="Item name cannot contain ->  [  <- in it";return true;
+        }else if (item_name.getText().toString().contains("]")) {
+            issue="Item name cannot contain ->  ]  <- in it";return true;
+        }else if (item_description.getText().toString().contains(".")) {
+            issue="Item description cannot contain ->  .  <- in it";return true;
+        }else if (item_description.getText().toString().contains("#")) {
+            issue="Item description cannot contain ->  #  <- in it";return true;
+        }else if (item_description.getText().toString().contains("$")) {
+            issue="Item description cannot contain ->  $  <- in it";return true;
+        }else if (item_description.getText().toString().contains("[")) {
+            issue="Item description cannot contain ->  [  <- in it";return true;
+        }else if (item_description.getText().toString().contains("]")) {
+            issue="Item description cannot contain ->  ]  <- in it";return true;
         }
         return false;
     }

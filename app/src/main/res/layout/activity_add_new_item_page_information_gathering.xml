@@ -58,6 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_25sdp"
+                        android:maxLength="100"
                         android:layout_marginRight="@dimen/_25sdp"
                         android:background="@drawable/less_border_white_background_input_taker"
                         android:hint="@string/item_name"
@@ -82,6 +83,7 @@
                     <EditText
                         android:id="@+id/item_description_at_add_items"
                         android:layout_width="match_parent"
+                        android:maxLength="500"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_25sdp"
                         android:layout_marginRight="@dimen/_25sdp"
@@ -109,6 +111,7 @@
                         android:id="@+id/item_quantity_at_add_items"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLength="9"
                         android:layout_marginLeft="@dimen/_25sdp"
                         android:layout_marginRight="@dimen/_25sdp"
                         android:background="@drawable/less_border_white_background_input_taker"
