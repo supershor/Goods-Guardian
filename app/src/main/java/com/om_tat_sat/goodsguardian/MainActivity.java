@@ -119,16 +119,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
 
     @Override
     public void onclick(int position, int index) {
-        Toast.makeText(this,position+"->"+index, Toast.LENGTH_SHORT).show();
     }
     public void notifications(){
         Toast.makeText(this, "notifications", Toast.LENGTH_SHORT).show();
-    }
-    public void search(){
-        Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
-    }
-    public void sort(){
-        Toast.makeText(this, "sort", Toast.LENGTH_SHORT).show();
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

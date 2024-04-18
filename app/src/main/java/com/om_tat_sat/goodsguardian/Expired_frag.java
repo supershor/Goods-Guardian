@@ -218,6 +218,5 @@ public class Expired_frag extends Fragment implements RecyclerviewInterface{
             intent1.putExtra("img_uri",final_arr.get(position).getImage());
             startActivity(intent1);
         }
-        Toast.makeText(getContext(), position+"->"+index, Toast.LENGTH_SHORT).show();
     }
 }

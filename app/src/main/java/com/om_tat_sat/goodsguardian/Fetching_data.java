@@ -326,7 +326,6 @@ public class Fetching_data extends AppCompatActivity {
                     Toast.makeText(Fetching_data.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-            Toast.makeText(this, "download", Toast.LENGTH_SHORT).show();
         }
     }
 

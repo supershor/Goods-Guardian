@@ -169,11 +169,9 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
                             Toast.makeText(Add_new_item_page_information_gathering.this, "Add successful", Toast.LENGTH_SHORT).show();
                             if (Category_MyDbHandler.check_already_exists_or_not("SELECT * FROM "+Parameters.CATEGORY_Table_Name +" WHERE "+Parameters.KEY_NAME+"='"+spinner.getSelectedItem()+"'")){
                                 Log.e( "onClick:---------------", "already exists");
-                                Toast.makeText(Add_new_item_page_information_gathering.this, "Aaaa", Toast.LENGTH_SHORT).show();
                             }else {
                                 Log.e( "onClick:-------------", "adding exists");
                                 Category_MyDbHandler.addItems(new Category_holder(spinner.getSelectedItem()+"",1));
-                                Toast.makeText(Add_new_item_page_information_gathering.this, "bbbbb", Toast.LENGTH_SHORT).show();
                             }
                             List<Category_holder>categoryHolders= Category_MyDbHandler.get_all_items_in_sorted_form_without_category(1);
                             for (Category_holder categoryMyDbHandler:categoryHolders) {
@@ -240,7 +238,7 @@ public class Add_new_item_page_information_gathering extends AppCompatActivity {
         if (resultCode==RESULT_OK){
             if (requestCode==100){
                 if (data!=null){
-                    Toast.makeText(this, "selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Image selection performed", Toast.LENGTH_SHORT).show();
                     Uri ImageSetter=data.getData();
                     uri=ImageSetter;
                     Bitmap bitmap=Image_reducer.reduceBitmapSize(Utils.getImage(getUri()),1024*1024);
