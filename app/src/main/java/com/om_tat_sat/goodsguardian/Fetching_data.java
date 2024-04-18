@@ -89,7 +89,7 @@ public class Fetching_data extends AppCompatActivity {
                 databaseReference.child("Total Count").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.getValue()+""!=null){
+                        if (snapshot.getValue()!=null){
                             total=Integer.parseInt(snapshot.getValue()+"");
                         }
                     }
@@ -266,7 +266,7 @@ public class Fetching_data extends AppCompatActivity {
                         Log.e( "onDataChange:0000000000000000000",snapshot.toString());
                         for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                             if (!(dataSnapshot.getKey()+"").equals("Total Count")){
-                                storageReference.child(dataSnapshot.getKey()+"").getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                storageReference.child(dataSnapshot.getKey()+"").getBytes(1024*1024*100).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                     @Override
                                     public void onSuccess(byte[] bytes) {
                                         Log.e( "onSuccess: item add-------------",dataSnapshot.toString());
