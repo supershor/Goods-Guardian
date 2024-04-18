@@ -1,9 +1,11 @@
 package com.om_tat_sat.goodsguardian;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -44,6 +46,7 @@ import javax.security.auth.login.LoginException;
 public class Fetching_data extends AppCompatActivity {
 
     Intent intent;
+    TextView progress_text_view;
     int total;
     Boolean ongoing=true;
     Boolean should_run=false;
@@ -56,6 +59,7 @@ public class Fetching_data extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
+    @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +77,7 @@ public class Fetching_data extends AppCompatActivity {
             startActivity(new Intent(Fetching_data.this, Loading_Page.class));
             finishAffinity();
         }
+        progress_text_view=findViewById(R.id.progress_text_view);
         categoryMyDbHandler=new Category_MyDbHandler(Fetching_data.this);
         myDbHandler=new MyDbHandler(Fetching_data.this);
         firebaseStorage=FirebaseStorage.getInstance("gs://goods-guardian-216f8.appspot.com");
@@ -86,6 +91,7 @@ public class Fetching_data extends AppCompatActivity {
             ongoing=true;
             should_run=true;
             if (ongoing&&should_run){
+                progress_text_view.setText("Data upload started");
                 upload_data();
             }
             should_run=false;
@@ -93,6 +99,7 @@ public class Fetching_data extends AppCompatActivity {
             ongoing=false;
             should_run=false;
             if (!ongoing){
+                progress_text_view.setText("Data download started");
                 databaseReference.child("Total Count").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -113,6 +120,7 @@ public class Fetching_data extends AppCompatActivity {
             ongoing=true;
             should_run=true;
             if (ongoing&&should_run){
+                progress_text_view.setText("Data upload started");
                 upload_data_and_logout();
             }
             should_run=false;
@@ -160,10 +168,12 @@ public class Fetching_data extends AppCompatActivity {
                                     i++;
                                     storageReference.child(name).putBytes(itemsHolder.getImage())
                                             .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                @SuppressLint("SetTextI18n")
                                                 @Override
                                                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                                     if (task.isSuccessful()){
                                                         j++;
+                                                        progress_text_view.setText(j+" Uploads completed");
                                                         Log.e( "Image Upload started----------------------","started");
                                                         Log.e( "Image Upload started----------------------",i+"==i");
                                                         Log.e( "Image Upload started----------------------",j+"==j");
@@ -231,10 +241,12 @@ public class Fetching_data extends AppCompatActivity {
                                     i++;
                                     storageReference.child(name).putBytes(itemsHolder.getImage())
                                             .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                @SuppressLint("SetTextI18n")
                                                 @Override
                                                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                                     if (task.isSuccessful()){
                                                         j++;
+                                                        progress_text_view.setText(j+" Uploads completed");
                                                         Log.e( "Image Upload started----------------------","started");
                                                         Log.e( "Image Upload started----------------------",i+"==i");
                                                         Log.e( "Image Upload started----------------------",j+"==j");
@@ -287,6 +299,7 @@ public class Fetching_data extends AppCompatActivity {
                             for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                                 if (!(dataSnapshot.getKey()+"").equals("Total Count")){
                                     storageReference.child(dataSnapshot.getKey()+"").getBytes(1024*1024*100).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @SuppressLint("SetTextI18n")
                                         @Override
                                         public void onSuccess(byte[] bytes) {
                                             Log.e( "onSuccess: item add-------------",dataSnapshot.toString());
@@ -296,6 +309,7 @@ public class Fetching_data extends AppCompatActivity {
                                             myDbHandler.addItems_if_does_not_exists(itemsHolder,bytes,query);
                                             hashMap.put(dataSnapshot.child("Category").getValue().toString(),1+hashMap.getOrDefault(dataSnapshot.child("Category").getValue().toString(),0));
                                             i++;
+                                            progress_text_view.setText(i+" Downloads completed");
                                             if (i==total){
                                                 ongoing=true;
                                                 should_run=true;

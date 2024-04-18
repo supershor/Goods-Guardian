@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerviewInter
         }else if (item.getItemId()==R.id.notifications){
             notifications();
         }
-        Toast.makeText(this, "item", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }
 }
