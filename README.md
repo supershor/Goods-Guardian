@@ -33,3 +33,18 @@ We welcome contributions to Goods Guardian. If you have suggestions or issues, p
 
 ## License
 Goods Guardian is licensed under the MIT License. See the LICENSE file for more details.
+
+## Results 
+
+
+![4](https://github.com/supershor/Goods-Guardian/assets/113038485/2e879f10-5700-461e-a8d5-1cad36c28394)
+
+![5](https://github.com/supershor/Goods-Guardian/assets/113038485/28c97c4b-8ccf-4400-862a-113759a9869d)
+
+![6](https://github.com/supershor/Goods-Guardian/assets/113038485/18a886f0-69d2-4f4b-9a1f-9f0c5b1716e7)
+
+![7](https://github.com/supershor/Goods-Guardian/assets/113038485/d77c75f5-1550-48ee-b7f3-76c6b976cb5c)
+
+
+
+
