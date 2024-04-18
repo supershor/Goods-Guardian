@@ -46,7 +46,9 @@ public class Fetching_data extends AppCompatActivity {
     Intent intent;
     int total;
     Boolean ongoing=true;
+    Boolean should_run=false;
     int i=0;
+    int j=0;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     Category_MyDbHandler categoryMyDbHandler;
@@ -82,9 +84,11 @@ public class Fetching_data extends AppCompatActivity {
         //setting condition to follow which code on arrival
         if (intent.getIntExtra("upload_or_download",1)==1){
             ongoing=true;
-            if (ongoing){
+            should_run=true;
+            if (ongoing&&should_run){
                 upload_data();
             }
+            should_run=false;
         }else if (intent.getIntExtra("upload_or_download",1)==2){
             ongoing=false;
             if (!ongoing){
@@ -106,13 +110,15 @@ public class Fetching_data extends AppCompatActivity {
             download_data();
         }else if (intent.getIntExtra("upload_or_download",1)==3){
             ongoing=true;
-            if (ongoing){
+            should_run=true;
+            if (ongoing&&should_run){
                 upload_data_and_logout();
             }
+            should_run=false;
         }
     }
     public void upload_data_and_logout(){
-        if (ongoing){
+        if (ongoing&&should_run){
             List<Items_holder>list=myDbHandler.get_all_items_in_sorted_form_without_category(1);
             databaseReference.setValue("")
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -129,6 +135,7 @@ public class Fetching_data extends AppCompatActivity {
                     });
             databaseReference.child("Total Count").setValue(myDbHandler.total_items());
             i=0;
+            j=0;
             if (list.isEmpty()){
                 Toast.makeText(this, "Empty Nothing To Upload", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Fetching_data.this,Loading_Page.class));
@@ -155,10 +162,12 @@ public class Fetching_data extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                                     if (task.isSuccessful()){
+                                                        j++;
                                                         Log.e( "Image Upload started----------------------","started");
                                                         Log.e( "Image Upload started----------------------",i+"==i");
+                                                        Log.e( "Image Upload started----------------------",j+"==j");
                                                         Log.e( "Image Upload started----------------------",list.size()+"list.size()");
-                                                        if (i==list.size()){
+                                                        if (i==list.size()&&j==list.size()){
                                                             Log.e( "Image Upload started----------------------","i");
                                                             Toast.makeText(Fetching_data.this,i+" Items Uploaded successful ", Toast.LENGTH_SHORT).show();
                                                             Toast.makeText(Fetching_data.this,"Log out done", Toast.LENGTH_SHORT).show();
@@ -181,7 +190,7 @@ public class Fetching_data extends AppCompatActivity {
         }
     }
     public void upload_data(){
-        if (ongoing){
+        if (ongoing&&should_run){
             List<Items_holder>list=myDbHandler.get_all_items_in_sorted_form_without_category(1);
             databaseReference.setValue("")
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -198,6 +207,7 @@ public class Fetching_data extends AppCompatActivity {
                     });
             databaseReference.child("Total Count").setValue(myDbHandler.total_items());
             i=0;
+            j=0;
             if (list.isEmpty()){
                 Toast.makeText(this, "Empty Nothing To Upload", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Fetching_data.this,MainActivity.class));
@@ -223,10 +233,12 @@ public class Fetching_data extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                                     if (task.isSuccessful()){
+                                                        j++;
                                                         Log.e( "Image Upload started----------------------","started");
                                                         Log.e( "Image Upload started----------------------",i+"==i");
+                                                        Log.e( "Image Upload started----------------------",j+"==j");
                                                         Log.e( "Image Upload started----------------------",list.size()+"list.size()");
-                                                        if (i==list.size()){
+                                                        if (i==list.size()&&j==list.size()){
                                                             Log.e( "Image Upload started----------------------","i");
                                                             Toast.makeText(Fetching_data.this,i+" Items Uploaded successful ", Toast.LENGTH_SHORT).show();
                                                             startActivity(new Intent(Fetching_data.this, MainActivity.class));
