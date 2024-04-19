@@ -48,6 +48,7 @@ public class Fetching_data extends AppCompatActivity {
 
     Intent intent;
     TextView progress_text_view;
+    TextView progress_out_of;
     int total;
     Boolean ongoing=true;
     Boolean should_run=false;
@@ -84,6 +85,7 @@ public class Fetching_data extends AppCompatActivity {
 
         //initializing
         progress_text_view=findViewById(R.id.progress_text_view);
+        progress_out_of=findViewById(R.id.progress_out_of);
         categoryMyDbHandler=new Category_MyDbHandler(Fetching_data.this);
         myDbHandler=new MyDbHandler(Fetching_data.this);
         firebaseStorage=FirebaseStorage.getInstance("gs://goods-guardian-216f8.appspot.com");
@@ -180,6 +182,7 @@ public class Fetching_data extends AppCompatActivity {
                                                     if (task.isSuccessful()){
                                                         j++;
                                                         progress_text_view.setText(j+" Uploads completed");
+                                                        progress_out_of.setText("out of "+list.size());
                                                         Log.e( "Image Upload started----------------------","started");
                                                         Log.e( "Image Upload started----------------------",i+"==i");
                                                         Log.e( "Image Upload started----------------------",j+"==j");
@@ -253,6 +256,7 @@ public class Fetching_data extends AppCompatActivity {
                                                     if (task.isSuccessful()){
                                                         j++;
                                                         progress_text_view.setText(j+" Uploads completed");
+                                                        progress_out_of.setText("out of "+list.size());
                                                         Log.e( "Image Upload started----------------------","started");
                                                         Log.e( "Image Upload started----------------------",i+"==i");
                                                         Log.e( "Image Upload started----------------------",j+"==j");
@@ -316,6 +320,7 @@ public class Fetching_data extends AppCompatActivity {
                                             hashMap.put(dataSnapshot.child("Category").getValue().toString(),1+hashMap.getOrDefault(dataSnapshot.child("Category").getValue().toString(),0));
                                             i++;
                                             progress_text_view.setText(i+" Downloads completed");
+                                            progress_out_of.setText("out of "+total);
                                             if (i==total){
                                                 ongoing=true;
                                                 should_run=true;
