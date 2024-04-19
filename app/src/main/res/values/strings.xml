@@ -1,5 +1,5 @@
 <resources>
-    <string name="loading_page_introduction_phrase">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</string>
+    <string name="loading_page_introduction_phrase">Keep your items fresh and good to use with Goods Guardian.\nGoods Guardian helps you keep track on Expiry Date of your goods.</string>
     <string name="app_name">Goods Guardian</string>
     <string name="sign_up">SIGN UP</string>
     <string name="login">Login</string>

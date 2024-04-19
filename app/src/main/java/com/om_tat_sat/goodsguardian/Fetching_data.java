@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -77,6 +78,11 @@ public class Fetching_data extends AppCompatActivity {
             startActivity(new Intent(Fetching_data.this, Loading_Page.class));
             finishAffinity();
         }
+
+        //setting status bar color
+        getWindow().setStatusBarColor(ContextCompat.getColor(Fetching_data.this,R.color.black));
+
+        //initializing
         progress_text_view=findViewById(R.id.progress_text_view);
         categoryMyDbHandler=new Category_MyDbHandler(Fetching_data.this);
         myDbHandler=new MyDbHandler(Fetching_data.this);
