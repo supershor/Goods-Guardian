@@ -11,8 +11,8 @@ android {
         applicationId = "com.om_tat_sat.goodsguardian"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
-        versionName = "4.0"
+        versionCode = 5
+        versionName = "5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

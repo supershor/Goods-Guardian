@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/welcome_back"
                     android:textAlignment="center"
-                    android:textSize="@dimen/_28sdp"
+                    android:textSize="@dimen/_24sdp"
                     android:textStyle="bold"
                     android:layout_marginBottom="@dimen/_25sdp"
                     android:textColor="@color/black"/>
