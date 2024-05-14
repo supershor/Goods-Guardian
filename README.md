@@ -13,8 +13,10 @@ Goods Guardian is an intuitive Android application designed to help users manage
 - **Notifications**: Receive timely alerts before your products expire.
 - **Data Sync**: Upload and download your data for easy offline access and cloud backups.
 
-## Installation
-To get started with Goods Guardian, download the app from the Google Play Store and follow the on-screen instructions to install it on your Android device.
+## Installation Guide
+
+1. Download the latest APK from the [releases](app/release) section or [playsotre](https://play.google.com/store/apps/details?id=com.om_tat_sat.goodsguardian) .
+2. Install the app on your Android device.
 
 ## Usage
 1. **Add a Product**: Tap the 'ADD NEW ITEM' button to add a new product. Enter the product's name, expiry date, description, and image.
