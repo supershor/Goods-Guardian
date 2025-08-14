@@ -5,16 +5,17 @@ plugins {
 
 android {
     namespace = "com.om_tat_sat.goodsguardian"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.om_tat_sat.goodsguardian"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 5
-        versionName = "5.0"
+        targetSdk = 35
+        versionCode = 6
+        versionName = "6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
